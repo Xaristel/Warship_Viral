@@ -233,15 +233,15 @@ public class GameController_script : MonoBehaviour
             {
                 leanLocalization.SetCurrentLanguage(1);
                 Button_SelectLanguage.GetComponentInChildren<Text>().text = "Русский";
-                ScoreText.rectTransform.localPosition = new Vector3(-62, 298, 0);
-                LevelText.rectTransform.localPosition = new Vector3(117, 298, 0);
+                ScoreText.rectTransform.localPosition = new Vector3(-49, 298, 0);
+                LevelText.rectTransform.localPosition = new Vector3(98, 298, 0);
             }
             else
             {
                 leanLocalization.SetCurrentLanguage(0);
                 Button_SelectLanguage.GetComponentInChildren<Text>().text = "English";
-                ScoreText.rectTransform.localPosition = new Vector3(-57, 298, 0);
-                LevelText.rectTransform.localPosition = new Vector3(88, 298, 0);
+                ScoreText.rectTransform.localPosition = new Vector3(-40, 298, 0);
+                LevelText.rectTransform.localPosition = new Vector3(70, 298, 0);
 
             }
         });

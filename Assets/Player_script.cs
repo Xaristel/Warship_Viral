@@ -106,31 +106,41 @@ public class Player_script : MonoBehaviour
             switch (touch.phase)
             {
                 case TouchPhase.Began:
-                    if (GetComponent<BoxCollider>() == Physics2D.OverlapPoint(touchPos))
                     {
-                        // get the offset between position you touches
-                        // and the center of the game object
-                        deltaX = touchPos.x - transform.position.x;
-                        deltaY = touchPos.y - transform.position.y;
-                        // if touch begins within the ball collider
-                        // then it is allowed to move
-                        moveAllowed = true;
-                        // restrict some rigidbody properties so it moves
-                        // more  smoothly and correctly
-                        ship.velocity = new Vector3(0, 0, 0);
+                        if (GetComponent<BoxCollider>() == Physics2D.OverlapPoint(touchPos))
+                        {
+                            // get the offset between position you touches
+                            // and the center of the game object
+                            deltaX = touchPos.x - transform.position.x;
+                            deltaY = touchPos.y - transform.position.z;
+                            // if touch begins within the ball collider
+                            // then it is allowed to move
+                            moveAllowed = true;
+                            // restrict some rigidbody properties so it moves
+                            // more  smoothly and correctly
+                            ship.velocity = new Vector3(0, 0, 0);
+                        }
+                        break;
                     }
-                    break;
-
 
                 case TouchPhase.Moved:
-                    if (GetComponent<BoxCollider>() == Physics2D.OverlapPoint(touchPos) && moveAllowed)
-                        ship.MovePosition(new Vector3(touchPos.x - deltaX, ship.position.y, touchPos.y - deltaY));
-                    break;
+                    {
+                        if (GetComponent<BoxCollider>() == Physics2D.OverlapPoint(touchPos) && moveAllowed)
+                        {
+                            ship.MovePosition(new Vector3(touchPos.x - deltaX, ship.position.y, touchPos.y - deltaY));
+                        }
+
+                        break;
+                    }
+
                 case TouchPhase.Ended:
-                    // restore initial parameters
-                    // when touch is ended
-                    moveAllowed = false;
-                    break;
+                    {
+                        // restore initial parameters
+                        // when touch is ended
+                        moveAllowed = false;
+                        break;
+                    }
+
             }
         }
         //ограничение движения
