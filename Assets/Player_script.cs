@@ -12,9 +12,9 @@ public class Player_script : MonoBehaviour
     public float rocketDelay;
     public float nextRocket;
 
-    protected GameController_script gameController_Script;
-    protected int GunLevel = 1;
-    public int Life = 10;
+    private GameController_script gameController_Script;
+    private int GunLevel = 1;
+    private int Life = 10;
 
     public GameObject Gun1;//где создать
     public GameObject Gun2;
@@ -35,14 +35,7 @@ public class Player_script : MonoBehaviour
     public GameObject PlayerExplosion;
     public GameObject Shield;
 
-    public TouchPad touchPad;
-
     Rigidbody ship;
-
-    void UpLevel()
-    {
-        GunLevel++;
-    }
 
     public Rigidbody GetRigidbody()
     {
@@ -63,6 +56,11 @@ public class Player_script : MonoBehaviour
         return Life;
     }
 
+    public void SetPlayerLife(int life)
+    {
+        Life = life;
+    }
+
     public void DecreasePlayerLife()
     {
         Life--;
@@ -74,9 +72,8 @@ public class Player_script : MonoBehaviour
         ship = GetComponent<Rigidbody>();
     }
 
-    private Vector2 _startPos;
     private bool moveAllowed = false;
-    public float deltaX, deltaY;
+    public float deltaX, deltaZ;
 
 
     void Update() //вызывается на каждый кадр
@@ -90,19 +87,10 @@ public class Player_script : MonoBehaviour
             return;
         }
 
-        //Vector2 direction = touchPad.GetDirection();
-        //куда хочет лететь игрок
-        //var moveHorizontal = Input.GetAxis("Horizontal");
-        //var moveVertical = Input.GetAxis("Vertical");
-
-        //полет и наклонение
-        //ship.velocity = new Vector3(direction.x, 0, direction.y) * speed;
-        //ship.rotation = Quaternion.Euler(direction.y * tilt, 0, -direction.x * tilt);
-
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-            Vector2 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
+            Vector3 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
             switch (touch.phase)
             {
                 case TouchPhase.Began:
@@ -112,7 +100,7 @@ public class Player_script : MonoBehaviour
                             // get the offset between position you touches
                             // and the center of the game object
                             deltaX = touchPos.x - transform.position.x;
-                            deltaY = touchPos.y - transform.position.z;
+                            deltaZ = touchPos.z - transform.position.z;
                             // if touch begins within the ball collider
                             // then it is allowed to move
                             moveAllowed = true;
@@ -127,7 +115,7 @@ public class Player_script : MonoBehaviour
                     {
                         if (GetComponent<BoxCollider>() == Physics2D.OverlapPoint(touchPos) && moveAllowed)
                         {
-                            ship.MovePosition(new Vector3(touchPos.x - deltaX, ship.position.y, touchPos.y - deltaY));
+                            ship.MovePosition(new Vector3(touchPos.x - deltaX, ship.position.y, touchPos.z - deltaZ));
                         }
 
                         break;

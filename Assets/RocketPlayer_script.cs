@@ -5,6 +5,7 @@ using UnityEngine;
 public class RocketPlayer_script : MonoBehaviour
 {
     public float speed;
+    private float averageSpeed;
     private List<GameObject> EnemiesList = new List<GameObject>();
     private GameObject[] TempList;
     private GameObject Target = null;
@@ -13,7 +14,7 @@ public class RocketPlayer_script : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        EnemiesList.Clear();
         TempList = GameObject.FindGameObjectsWithTag("LightEnemy");
         if (TempList != null)
             foreach (var item in TempList)
@@ -88,10 +89,12 @@ public class RocketPlayer_script : MonoBehaviour
         {
             Quaternion targetRotation = Quaternion.LookRotation(Target.transform.position - transform.position);
             gameObject.transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 20); // Поворот к целевой точке.
-            GetComponent<Rigidbody>().velocity = gameObject.transform.forward * speed * minDist;
+                                                                                                      // averageSpeed = 
+            GetComponent<Rigidbody>().velocity = gameObject.transform.forward * speed; //* minDist;
         }
         else
         {
+            Start();
             GetComponent<Rigidbody>().velocity = gameObject.transform.forward * 40;
         }
     }

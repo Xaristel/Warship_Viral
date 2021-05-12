@@ -9,7 +9,6 @@ public class GameController_script : MonoBehaviour
     public UnityEngine.UI.Text ScoreText; //текст счета
     public UnityEngine.UI.Text LevelText; //текст уровня оружия
     public UnityEngine.UI.Text XPText;
-    public UnityEngine.UI.Text Text;
 
     public UnityEngine.UI.Button startButton;
     public UnityEngine.UI.Button recordButton;
@@ -35,7 +34,6 @@ public class GameController_script : MonoBehaviour
     public GameObject Canvas;
     public GameObject InGameUI;
     public LeanLocalization leanLocalization;
-    public GameObject MovingZone;
 
     private GameObject Player;
     private Player_script Player_Script; //объект скрипта игрока
@@ -45,6 +43,7 @@ public class GameController_script : MonoBehaviour
     private bool isStarted = false; //переменная начала игры
     protected int Mode = 0;
     protected bool SettingsMode = false;
+    private int Language = 0;
 
     public bool getIsStarted()
     {
@@ -111,6 +110,28 @@ public class GameController_script : MonoBehaviour
         InGameMenu.SetActive(false);
         InGameUI.SetActive(false);
         menu.SetActive(true);
+
+        if (PlayerPrefs.HasKey("SelectedLanguage"))
+        {
+            Language = PlayerPrefs.GetInt("SelectedLanguage");
+
+            Debug.Log("Language loaded!");
+        }
+        else
+        {
+            Debug.LogError("There is no save data!");
+        }
+
+        if (Language == 1)
+        {
+            ScoreText.rectTransform.localPosition = new Vector3(-49, 298, 0);
+            LevelText.rectTransform.localPosition = new Vector3(98, 298, 0);
+        }
+        else
+        {
+            ScoreText.rectTransform.localPosition = new Vector3(-40, 298, 0);
+            LevelText.rectTransform.localPosition = new Vector3(70, 298, 0);
+        }
 
         Player = GameObject.Find("Player");
         Player_Script = Player.GetComponent<Player_script>();
@@ -192,7 +213,6 @@ public class GameController_script : MonoBehaviour
             if (SettingsMode) //если во время игры
             {
                 InGameMenu.SetActive(true);
-                MovingZone.SetActive(false);
             }
             else //если в меню
             {
@@ -206,7 +226,6 @@ public class GameController_script : MonoBehaviour
         Button_Resume_InGame.onClick.AddListener(delegate
         {
             isStarted = true;
-            MovingZone.SetActive(true);
             InGameMenu.SetActive(false);
         });
 
@@ -231,6 +250,7 @@ public class GameController_script : MonoBehaviour
         {
             if (Button_SelectLanguage.GetComponentInChildren<Text>().text == "English")
             {
+                PlayerPrefs.SetInt("SelectedLanguage", 1);
                 leanLocalization.SetCurrentLanguage(1);
                 Button_SelectLanguage.GetComponentInChildren<Text>().text = "Русский";
                 ScoreText.rectTransform.localPosition = new Vector3(-49, 298, 0);
@@ -238,12 +258,13 @@ public class GameController_script : MonoBehaviour
             }
             else
             {
+                PlayerPrefs.SetInt("SelectedLanguage", 0);
                 leanLocalization.SetCurrentLanguage(0);
                 Button_SelectLanguage.GetComponentInChildren<Text>().text = "English";
                 ScoreText.rectTransform.localPosition = new Vector3(-40, 298, 0);
                 LevelText.rectTransform.localPosition = new Vector3(70, 298, 0);
-
             }
+            PlayerPrefs.Save();
         });
     }
 
