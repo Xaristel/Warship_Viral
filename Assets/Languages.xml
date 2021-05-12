@@ -1,0 +1,33 @@
+<Data>
+	<EN Key = "Warship Viral"	Word = "Warship Viral"/>
+	<EN Key = "Start game"	Word = "Start game"/>
+	<EN Key = "Records"	Word = "Records"/>
+	<EN Key = "Settings"	Word = "Settings"/>
+	<EN Key = "Exit"	Word = "Exit"/>
+	<EN Key = "Music"	Word = "Music"/>
+	<EN Key = "Effects"	Word = "Effects"/>
+	<EN Key = "Language"	Word = "Language"/>
+	<EN Key = "Choose difficult"	Word = "Choose difficult"/>
+	<EN Key = "Easy"	Word = "Easy"/>
+	<EN Key = "Normal"	Word = "Normal"/>
+	<EN Key = "Hard"	Word = "Hard"/>
+	<EN Key = "Score:"	Word = "Score:"/>
+	<En Key = "Level:"	Word = "Level:"/>
+	<En Key = "You dead"	Word = "You dead"/>
+
+	<RU Key = "Warship Viral"	Word = "Боевой корабль Вирал"/>
+	<RU Key = "Start game"	Word = "Начать игру"/>
+	<RU Key = "Records"	Word = "Рекорды"/>
+	<RU Key = "Settings"	Word = "Настройки"/>
+	<RU Key = "Exit"	Word = "Выход"/>
+	<RU Key = "Music"	Word = "Музыка"/>
+	<RU Key = "Effects"	Word = "Эффекты"/>
+	<RU Key = "Language"	Word = "Язык"/>
+	<RU Key = "Choose difficult"	Word = "Выберите сложность"/>
+	<RU Key = "Easy"	Word = "Лёгкий"/>
+	<RU Key = "Normal"	Word = "Средний"/>
+	<RU Key = "Hard"	Word = "Сложный"/>
+	<RU Key = "Score:"	Word = "Счёт:"/>
+	<RU Key = "Level:"	Word = "Уровень:"/>
+	<RU Key = "You dead"	Word = "Вы погибли"/>
+</Data>
