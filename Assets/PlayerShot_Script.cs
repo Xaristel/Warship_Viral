@@ -24,8 +24,10 @@ public class PlayerShot_Script : MonoBehaviour
             {
                 Destroy(gameObject);
             }
-
-            return;
+        }
+        else
+        {
+            GetComponent<Rigidbody>().velocity = gameObject.transform.forward * speed;
         }
     }
 }

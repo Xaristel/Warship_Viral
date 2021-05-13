@@ -9,6 +9,7 @@ public class GameController_script : MonoBehaviour
     public UnityEngine.UI.Text ScoreText; //текст счета
     public UnityEngine.UI.Text LevelText; //текст уровня оружия
     public UnityEngine.UI.Text XPText;
+    public UnityEngine.UI.Text EndGameScoreText;
 
     public UnityEngine.UI.Button startButton;
     public UnityEngine.UI.Button recordButton;
@@ -135,13 +136,13 @@ public class GameController_script : MonoBehaviour
 
         if (Language == 1)
         {
-            ScoreText.rectTransform.localPosition = new Vector3(-49, 298, 0);
-            LevelText.rectTransform.localPosition = new Vector3(98, 298, 0);
+            ScoreText.rectTransform.localPosition = new Vector3(-50, 298, 0);
+            LevelText.rectTransform.localPosition = new Vector3(51, 298, 0);
         }
         else
         {
-            ScoreText.rectTransform.localPosition = new Vector3(-40, 298, 0);
-            LevelText.rectTransform.localPosition = new Vector3(70, 298, 0);
+            ScoreText.rectTransform.localPosition = new Vector3(-44, 298, 0);
+            LevelText.rectTransform.localPosition = new Vector3(26, 298, 0);
         }
 
         startButton.onClick.AddListener(delegate
@@ -194,46 +195,54 @@ public class GameController_script : MonoBehaviour
 
         Button_Easy.onClick.AddListener(delegate
         {
-            InGameUI.SetActive(true);
             Mode = 1;
-            isStarted = true; //начало игры
             Score = 0;
             ScoreForNextLevel = 300;
             ScoreText.text = Score.ToString();
             LevelText.text = Player_Script.GetGunLevel().ToString();
+            EndGameScoreText.text = "";
+
+            InGameUI.SetActive(true);
             difficult.SetActive(false);
             mainCamera.SetActive(true);
+
+            isStarted = true; //начало игры
             SettingsMode = true;
             isGameEnd = false;
         });
 
         Button_Normal.onClick.AddListener(delegate
         {
-            InGameUI.SetActive(true);
             Mode = 2;
-            isStarted = true; //начало игры
             Score = 0;
             ScoreForNextLevel = 300;
             ScoreText.text = Score.ToString();
             LevelText.text = Player_Script.GetGunLevel().ToString();
+            EndGameScoreText.text = "";
+
+            InGameUI.SetActive(true);
             difficult.SetActive(false);
             mainCamera.SetActive(true);
+
+            isStarted = true; //начало игры
             SettingsMode = true;
             isGameEnd = false;
         });
 
         Button_Hard.onClick.AddListener(delegate
         {
-            InGameUI.SetActive(true);
             Mode = 3;
-            isStarted = true; //начало игры
             Score = 0;
             ScoreForNextLevel = 300;
             ScoreText.text = Score.ToString();
             LevelText.text = Player_Script.GetGunLevel().ToString();
+            EndGameScoreText.text = "";
+
+            InGameUI.SetActive(true);
             difficult.SetActive(false);
             mainCamera.SetActive(true);
 
+            isStarted = true; //начало игры
             SettingsMode = true;
             isGameEnd = false;
         });
@@ -289,16 +298,16 @@ public class GameController_script : MonoBehaviour
                 PlayerPrefs.SetInt("SelectedLanguage", 1);
                 leanLocalization.SetCurrentLanguage(1);
                 Button_SelectLanguage.GetComponentInChildren<Text>().text = "Русский";
-                ScoreText.rectTransform.localPosition = new Vector3(-49, 298, 0);
-                LevelText.rectTransform.localPosition = new Vector3(98, 298, 0);
+                ScoreText.rectTransform.localPosition = new Vector3(-50, 298, 0);
+                LevelText.rectTransform.localPosition = new Vector3(51, 298, 0);
             }
             else
             {
                 PlayerPrefs.SetInt("SelectedLanguage", 0);
                 leanLocalization.SetCurrentLanguage(0);
                 Button_SelectLanguage.GetComponentInChildren<Text>().text = "English";
-                ScoreText.rectTransform.localPosition = new Vector3(-40, 298, 0);
-                LevelText.rectTransform.localPosition = new Vector3(70, 298, 0);
+                ScoreText.rectTransform.localPosition = new Vector3(-44, 298, 0);
+                LevelText.rectTransform.localPosition = new Vector3(26, 298, 0);
             }
             PlayerPrefs.Save();
         });
@@ -312,6 +321,16 @@ public class GameController_script : MonoBehaviour
             {
                 isStarted = false;
                 XPText.text = "0";
+
+                if (Language == 1)
+                {
+                    EndGameScoreText.text = "Счёт: " + Score.ToString();
+                }
+                else
+                {
+                    EndGameScoreText.text = "Score: " + Score.ToString();
+                }
+
                 GameEnd.SetActive(true);
                 Button_Pause.enabled = false;
             }
