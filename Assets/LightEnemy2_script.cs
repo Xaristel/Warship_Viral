@@ -53,6 +53,14 @@ public class LightEnemy2_script : MonoBehaviour
     {
         if (!gameController_Script.getIsStarted())
         {
+            GetComponent<Rigidbody>().velocity = gameObject.transform.forward * 0;
+
+            if (gameController_Script.GetIsGameEnd())
+            {
+                Destroy(gameObject); //destroy enemy
+                Instantiate(EnemyExplosion, ship.transform.position, Quaternion.identity);
+            }
+
             return;
         }
 
@@ -113,12 +121,16 @@ public class LightEnemy2_script : MonoBehaviour
             Instantiate(Rocket, RocketGun2.transform.position, Quaternion.identity);
             nextShotRocket2 = Time.time + shotDelayRocket2;
         }
-        var rigidbody = GetComponent<Rigidbody>();
-        // Определение целевой ротации.
-        Vector3 targetPoint = Player.transform.position;
-        Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
-        // Поворот к целевой точке.
-        gameObject.transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 20 * Time.deltaTime) * Quaternion.Euler(0.0f, 0.0f, rigidbody.velocity.x * -15 * 2 * Time.deltaTime);
+
+        if (Player != null)
+        {
+            var rigidbody = GetComponent<Rigidbody>();
+            // Определение целевой ротации.
+            Vector3 targetPoint = Player.transform.position;
+            Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
+            // Поворот к целевой точке.
+            gameObject.transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 20 * Time.deltaTime) * Quaternion.Euler(0.0f, 0.0f, rigidbody.velocity.x * -15 * 2 * Time.deltaTime);
+        }
     }
 
     private void OnTriggerEnter(Collider other)

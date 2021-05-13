@@ -25,6 +25,7 @@ public class GameController_script : MonoBehaviour
 
     public UnityEngine.UI.Button Button_Pause;
     public UnityEngine.UI.Button Button_SelectLanguage;
+    public UnityEngine.UI.Button EndButton;
 
     public GameObject menu;
     public GameObject settings;
@@ -33,6 +34,7 @@ public class GameController_script : MonoBehaviour
     public GameObject InGameMenu;
     public GameObject Canvas;
     public GameObject InGameUI;
+    public GameObject GameEnd;
     public LeanLocalization leanLocalization;
 
     private GameObject Player;
@@ -44,10 +46,16 @@ public class GameController_script : MonoBehaviour
     protected int Mode = 0;
     protected bool SettingsMode = false;
     private int Language = 0;
+    private bool isGameEnd = false;
 
     public bool getIsStarted()
     {
         return isStarted;
+    }
+
+    public bool GetIsGameEnd()
+    {
+        return isGameEnd;
     }
 
     public int getMode()
@@ -111,6 +119,9 @@ public class GameController_script : MonoBehaviour
         InGameUI.SetActive(false);
         menu.SetActive(true);
 
+        Player = GameObject.Find("Player");
+        Player_Script = Player.GetComponent<Player_script>();
+
         if (PlayerPrefs.HasKey("SelectedLanguage"))
         {
             Language = PlayerPrefs.GetInt("SelectedLanguage");
@@ -133,16 +144,26 @@ public class GameController_script : MonoBehaviour
             LevelText.rectTransform.localPosition = new Vector3(70, 298, 0);
         }
 
-        Player = GameObject.Find("Player");
-        Player_Script = Player.GetComponent<Player_script>();
-
         startButton.onClick.AddListener(delegate
         {
-            LevelText.text = Player_Script.GetGunLevel().ToString();
-            ScoreText.text = Score.ToString();
             menu.SetActive(false); //выключение меню
             settings.SetActive(false);
             difficult.SetActive(true);
+
+            Player_Script.gameObject.SetActive(true);
+            Player.transform.position = new Vector3(0, 0, -60);
+            Player_Script.SetPlayerLife(10);
+        });
+
+        EndButton.onClick.AddListener(delegate
+        {
+            SettingsMode = false;
+            menu.SetActive(true);
+            GameEnd.SetActive(false);
+            InGameUI.SetActive(false);
+            Button_Pause.enabled = true;
+
+            isGameEnd = true;
         });
 
         recordButton.onClick.AddListener(delegate
@@ -177,9 +198,13 @@ public class GameController_script : MonoBehaviour
             Mode = 1;
             isStarted = true; //начало игры
             Score = 0;
+            ScoreForNextLevel = 300;
+            ScoreText.text = Score.ToString();
+            LevelText.text = Player_Script.GetGunLevel().ToString();
             difficult.SetActive(false);
             mainCamera.SetActive(true);
             SettingsMode = true;
+            isGameEnd = false;
         });
 
         Button_Normal.onClick.AddListener(delegate
@@ -188,9 +213,13 @@ public class GameController_script : MonoBehaviour
             Mode = 2;
             isStarted = true; //начало игры
             Score = 0;
+            ScoreForNextLevel = 300;
+            ScoreText.text = Score.ToString();
+            LevelText.text = Player_Script.GetGunLevel().ToString();
             difficult.SetActive(false);
             mainCamera.SetActive(true);
             SettingsMode = true;
+            isGameEnd = false;
         });
 
         Button_Hard.onClick.AddListener(delegate
@@ -199,16 +228,23 @@ public class GameController_script : MonoBehaviour
             Mode = 3;
             isStarted = true; //начало игры
             Score = 0;
+            ScoreForNextLevel = 300;
+            ScoreText.text = Score.ToString();
+            LevelText.text = Player_Script.GetGunLevel().ToString();
             difficult.SetActive(false);
             mainCamera.SetActive(true);
 
             SettingsMode = true;
+            isGameEnd = false;
         });
 
         Button_Pause.onClick.AddListener(delegate
         {
             isStarted = false;
-            Player_Script.GetRigidbody().velocity = new Vector3(0, 0, 0);
+            if (Player != null)
+            {
+                Player_Script.GetRigidbody().velocity = new Vector3(0, 0, 0);
+            }
 
             if (SettingsMode) //если во время игры
             {
@@ -270,11 +306,17 @@ public class GameController_script : MonoBehaviour
 
     void Update()
     {
-        if (Player_Script.GetPlayerLife() <= 0)
+        if (isStarted)
         {
-            isStarted = false;
-            //end game
+            if (Player_Script.GetPlayerLife() <= 0)//end game
+            {
+                isStarted = false;
+                XPText.text = "0";
+                GameEnd.SetActive(true);
+                Button_Pause.enabled = false;
+            }
+            XPText.text = Player_Script.GetPlayerLife().ToString();
         }
-        XPText.text = Player_Script.GetPlayerLife().ToString();
+
     }
 }

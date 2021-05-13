@@ -216,15 +216,16 @@ public class Player_script : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "EnemyShot" || other.tag == "Asteroid" || other.tag == "InsectoidEnemy")
+        if (other.tag == "EnemyShot" || other.tag == "Asteroid" || other.tag == "InsectoidEnemy" && gameController_Script.getIsStarted())
         {
             DecreasePlayerLife();
             Shield.SetActive(true);
             Destroy(other.gameObject);
         }
+
         if (GetPlayerLife() == 0)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
             Instantiate(PlayerExplosion, ship.transform.position, Quaternion.identity);
         }
     }

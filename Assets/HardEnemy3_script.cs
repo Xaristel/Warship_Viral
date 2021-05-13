@@ -26,19 +26,19 @@ public class HardEnemy3_script : MonoBehaviour
     private bool endOfStartMoving = true;
     private int EnemyLife = 30;
 
-    protected GameController_script GameController_Script;
+    protected GameController_script gameController_Script;
     protected EnemyCreator_script EnemyCreator_Script;
     protected GameObject Player;
 
     void Start() // Start is called before the first frame update
     {
-        GameController_Script = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController_script>();
+        gameController_Script = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController_script>();
         EnemyCreator_Script = GameObject.FindGameObjectWithTag("EnemyCreator").GetComponent<EnemyCreator_script>();
 
         Player = GameObject.FindGameObjectWithTag("Player");
 
         ship = GetComponent<Rigidbody>();
-        gameMode = GameController_Script.getMode();
+        gameMode = gameController_Script.getMode();
         spawnType = EnemyCreator_Script.GetSpawnType();
 
         ship.rotation = Quaternion.Euler(0, 180, 0);
@@ -49,8 +49,16 @@ public class HardEnemy3_script : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!GameController_Script.getIsStarted())
+        if (!gameController_Script.getIsStarted())
         {
+            GetComponent<Rigidbody>().velocity = gameObject.transform.forward * 0;
+
+            if (gameController_Script.GetIsGameEnd())
+            {
+                Destroy(gameObject); //destroy enemy
+                Instantiate(EnemyExplosion, ship.transform.position, Quaternion.identity);
+            }
+
             return;
         }
 
@@ -109,13 +117,16 @@ public class HardEnemy3_script : MonoBehaviour
             Instantiate(Shot, Gun2.transform.position, Quaternion.identity);
             nextShotLazer2 = Time.time + shotDelayLazer2;
         }
-        var rigidbody = GetComponent<Rigidbody>();
-        // Определение целевой ротации.
-        Vector3 targetPoint = Player.transform.position;
-        Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
-        // Поворот к целевой точке.
-        gameObject.transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 20 * Time.deltaTime) * Quaternion.Euler(0.0f, 0.0f, rigidbody.velocity.x * -15 * 2 * Time.deltaTime);
 
+        if (Player != null)
+        {
+            var rigidbody = GetComponent<Rigidbody>();
+            // Определение целевой ротации.
+            Vector3 targetPoint = Player.transform.position;
+            Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
+            // Поворот к целевой точке.
+            gameObject.transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 20 * Time.deltaTime) * Quaternion.Euler(0.0f, 0.0f, rigidbody.velocity.x * -15 * 2 * Time.deltaTime);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -130,7 +141,7 @@ public class HardEnemy3_script : MonoBehaviour
             {
                 Destroy(gameObject); //destroy enemy
                 Instantiate(EnemyExplosion, ship.transform.position, Quaternion.identity);
-                GameController_Script.IncreaseScore("HardEnemy");
+                gameController_Script.IncreaseScore("HardEnemy");
             }
         }
     }
