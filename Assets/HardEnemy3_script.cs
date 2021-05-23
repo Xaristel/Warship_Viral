@@ -24,7 +24,7 @@ public class HardEnemy3_script : MonoBehaviour
     public float moveHorizontal = 0;
     public float moveVertical = -1;
     private bool endOfStartMoving = true;
-    private int EnemyLife = 30;
+    public int EnemyLife = 30;
 
     protected GameController_script gameController_Script;
     protected EnemyCreator_script EnemyCreator_Script;

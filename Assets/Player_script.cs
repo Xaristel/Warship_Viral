@@ -15,6 +15,8 @@ public class Player_script : MonoBehaviour
     private GameController_script gameController_Script;
     private int GunLevel = 1;
     private int Life = 10;
+    private float defendDelay = 1;
+    private float defendTime = 0;
 
     public GameObject Gun1;//где создать
     public GameObject Gun2;
@@ -47,6 +49,11 @@ public class Player_script : MonoBehaviour
         return GunLevel;
     }
 
+    public void SetGunLevel(int level)
+    {
+        GunLevel = level;
+    }
+
     public void IncreaseGunLevel()
     {
         GunLevel++;
@@ -64,6 +71,11 @@ public class Player_script : MonoBehaviour
     public void DecreasePlayerLife()
     {
         Life--;
+    }
+
+    public void IncreasePlayerLife()
+    {
+        Life++;
     }
 
     void Start() //вызывается при создании объекта 
@@ -216,11 +228,28 @@ public class Player_script : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
+        if (other.tag == "HP Kit")
+        {
+            IncreasePlayerLife();
+            Shield.SetActive(true);
+        }
+
+        if (Time.time < defendTime + defendDelay)
+        {
+            if (other.tag == "EnemyShot" || other.tag == "Asteroid" || other.tag == "InsectoidEnemy" && gameController_Script.getIsStarted())
+            {
+                Shield.SetActive(true);
+                Destroy(other.gameObject);
+            }
+            return;
+        }
+
         if (other.tag == "EnemyShot" || other.tag == "Asteroid" || other.tag == "InsectoidEnemy" && gameController_Script.getIsStarted())
         {
             DecreasePlayerLife();
             Shield.SetActive(true);
             Destroy(other.gameObject);
+            defendTime = Time.time;
         }
 
         if (GetPlayerLife() == 0)

@@ -50,6 +50,7 @@ public class Rocket_script : MonoBehaviour
     {
         if (other.tag != "PlayerShot" && other.tag != "GameBorder" && other.tag != "EnemyShot" && other.tag != "LightEnemy" && other.tag != "StandartEnemy" && other.tag != "HardEnemy" && other.tag != "Boss")
         {
+            Destroy(gameObject);
             Instantiate(Explosion, gameObject.transform.position, Quaternion.identity);
         }
     }

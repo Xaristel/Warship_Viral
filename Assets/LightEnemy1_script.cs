@@ -25,7 +25,7 @@ public class LightEnemy1_script : MonoBehaviour
     public float moveVertical = -1;
     private bool endOfStartMoving = true;
     private float lastX = 0;
-    private int EnemyLife = 1;
+    public int EnemyLife = 1;
 
     protected GameController_script gameController_Script;
     protected EnemyCreator_script enemyCreator_Script;

@@ -40,6 +40,7 @@ public class GameController_script : MonoBehaviour
 
     private GameObject Player;
     private Player_script Player_Script; //объект скрипта игрока
+    private EnemyCreator_script enemyCreator_Script;
 
     protected int Score = 0; //переменная кол-ва очков
     protected int ScoreForNextLevel = 300;
@@ -96,11 +97,14 @@ public class GameController_script : MonoBehaviour
             Player_Script.IncreaseGunLevel();
             LevelText.text = Player_Script.GetGunLevel().ToString();
             ScoreForNextLevel *= 2;
+            enemyCreator_Script.NextWaveDelay -= 2;
+            enemyCreator_Script.AddHPForEnemies();
 
             if (Player_Script.GetGunLevel() == 3)
             {
                 Player_Script.shotDelay = 0.4F;
             }
+
             if (Player_Script.GetGunLevel() == 5)
             {
                 Player_Script.shotDelay = 0.3F;
@@ -122,6 +126,7 @@ public class GameController_script : MonoBehaviour
 
         Player = GameObject.Find("Player");
         Player_Script = Player.GetComponent<Player_script>();
+        enemyCreator_Script = GameObject.Find("EnemyCreators").GetComponent<EnemyCreator_script>();
 
         if (PlayerPrefs.HasKey("SelectedLanguage"))
         {
@@ -198,9 +203,12 @@ public class GameController_script : MonoBehaviour
             Mode = 1;
             Score = 0;
             ScoreForNextLevel = 300;
+            Player_Script.SetGunLevel(1);
             ScoreText.text = Score.ToString();
             LevelText.text = Player_Script.GetGunLevel().ToString();
             EndGameScoreText.text = "";
+
+            enemyCreator_Script.SetDefaultSettings();
 
             InGameUI.SetActive(true);
             difficult.SetActive(false);
@@ -216,9 +224,12 @@ public class GameController_script : MonoBehaviour
             Mode = 2;
             Score = 0;
             ScoreForNextLevel = 300;
+            Player_Script.SetGunLevel(1);
             ScoreText.text = Score.ToString();
             LevelText.text = Player_Script.GetGunLevel().ToString();
             EndGameScoreText.text = "";
+
+            enemyCreator_Script.SetDefaultSettings();
 
             InGameUI.SetActive(true);
             difficult.SetActive(false);
@@ -234,9 +245,12 @@ public class GameController_script : MonoBehaviour
             Mode = 3;
             Score = 0;
             ScoreForNextLevel = 300;
+            Player_Script.SetGunLevel(1);
             ScoreText.text = Score.ToString();
             LevelText.text = Player_Script.GetGunLevel().ToString();
             EndGameScoreText.text = "";
+
+            enemyCreator_Script.SetDefaultSettings();
 
             InGameUI.SetActive(true);
             difficult.SetActive(false);
@@ -289,6 +303,7 @@ public class GameController_script : MonoBehaviour
             SettingsMode = false;
             mainCamera.SetActive(false);
             InGameUI.SetActive(false);
+            isGameEnd = true;
         });
 
         Button_SelectLanguage.onClick.AddListener(delegate

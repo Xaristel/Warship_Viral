@@ -21,10 +21,16 @@ public class EnemyCreator_script : MonoBehaviour
     public GameObject HardEnemy2;
     public GameObject HardEnemy3;
 
+    public GameObject HPKit;
+
     protected GameController_script gameController_Script;
 
-    public double NextWaveDelay; //3
+    public double NextWaveDelay = 14; //14 - default
     public double NextWaveTime = 0;
+    public double NextHPKitDelay = 60; //60 - default
+    public double NextHPKitTime = 0;
+
+    public int AddHP = 4;
     private int spawnType;
 
     public int GetSpawnType()
@@ -34,6 +40,27 @@ public class EnemyCreator_script : MonoBehaviour
     void Start()    // Start is called before the first frame update
     {
         gameController_Script = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController_script>();
+
+        NextHPKitTime = Time.time + NextHPKitDelay;
+
+        switch (gameController_Script.getMode())
+        {
+            case 1:
+                {
+                    AddHP = 4;
+                    break;
+                }
+            case 2:
+                {
+                    AddHP = 6;
+                    break;
+                }
+            case 3:
+                {
+                    AddHP = 8;
+                    break;
+                }
+        }
     }
 
     void Update()   // Update is called once per frame
@@ -42,17 +69,161 @@ public class EnemyCreator_script : MonoBehaviour
         {
             return;
         }
+
         if (Time.time > NextWaveTime)
         {
             NextWaveTime = Time.time + NextWaveDelay; //Random.Range(1, 2); TODO Insectoid Level
-            SpawnEnemy();
+
+            switch (gameController_Script.getMode())
+            {
+                case 1:
+                    {
+                        EasyLevel();
+                        break;
+                    }
+                case 2:
+                    {
+                        MediumLevel();
+                        break;
+                    }
+                case 3:
+                    {
+                        HardLevel();
+                        break;
+                    }
+            }
+        }
+
+        if (Time.time > NextHPKitTime)
+        {
+            NextHPKitDelay = Random.Range(50, 90);
+            NextHPKitTime = Time.time + NextHPKitDelay;
+            SpawnHPKit();
         }
     }
 
-    void SpawnEnemy()
+    void EasyLevel() // 35% - 50% - 15%
     {
-        spawnType = Random.Range(1, 9);
+        int randomSpawnNumber = Random.Range(0, 101);
 
+        if (randomSpawnNumber >= 0 && randomSpawnNumber < 12)
+        {
+            spawnType = 1; //standart
+        }
+        else if (randomSpawnNumber >= 12 && randomSpawnNumber < 24)
+        {
+            spawnType = 2; //standart
+        }
+        else if (randomSpawnNumber >= 24 && randomSpawnNumber < 36)
+        {
+            spawnType = 3; //standart
+        }
+        else if (randomSpawnNumber >= 36 && randomSpawnNumber < 62)
+        {
+            spawnType = 4; //easy
+        }
+        else if (randomSpawnNumber >= 62 && randomSpawnNumber < 88)
+        {
+            spawnType = 5; //easy
+        }
+        else if (randomSpawnNumber >= 88 && randomSpawnNumber < 93)
+        {
+            spawnType = 6; //hard
+        }
+        else if (randomSpawnNumber >= 93 && randomSpawnNumber < 97)
+        {
+            spawnType = 7; //hard
+        }
+        else if (randomSpawnNumber >= 97 && randomSpawnNumber < 101)
+        {
+            spawnType = 8; //hard
+        }
+
+        SpawnEnemy();
+    }
+
+    void MediumLevel() // 45% - 30% - 25%
+    {
+        int randomSpawnNumber = Random.Range(0, 101);
+
+        if (randomSpawnNumber >= 0 && randomSpawnNumber < 15)
+        {
+            spawnType = 1; //standart
+        }
+        else if (randomSpawnNumber >= 15 && randomSpawnNumber < 30)
+        {
+            spawnType = 2; //standart
+        }
+        else if (randomSpawnNumber >= 30 && randomSpawnNumber < 45)
+        {
+            spawnType = 3; //standart
+        }
+        else if (randomSpawnNumber >= 45 && randomSpawnNumber < 60)
+        {
+            spawnType = 4; //easy
+        }
+        else if (randomSpawnNumber >= 60 && randomSpawnNumber < 75)
+        {
+            spawnType = 5; //easy
+        }
+        else if (randomSpawnNumber >= 75 && randomSpawnNumber < 83)
+        {
+            spawnType = 6; //hard
+        }
+        else if (randomSpawnNumber >= 83 && randomSpawnNumber < 91)
+        {
+            spawnType = 7; //hard
+        }
+        else if (randomSpawnNumber >= 91 && randomSpawnNumber < 101)
+        {
+            spawnType = 8; //hard
+        }
+
+        SpawnEnemy();
+    }
+
+    void HardLevel() // 45% - 15% - 40%
+    {
+        int randomSpawnNumber = Random.Range(0, 101);
+
+        if (randomSpawnNumber >= 0 && randomSpawnNumber < 15)
+        {
+            spawnType = 1; //standart
+        }
+        else if (randomSpawnNumber >= 15 && randomSpawnNumber < 30)
+        {
+            spawnType = 2; //standart
+        }
+        else if (randomSpawnNumber >= 30 && randomSpawnNumber < 45)
+        {
+            spawnType = 3; //standart
+        }
+        else if (randomSpawnNumber >= 45 && randomSpawnNumber < 53)
+        {
+            spawnType = 4; //easy
+        }
+        else if (randomSpawnNumber >= 53 && randomSpawnNumber < 61)
+        {
+            spawnType = 5; //easy
+        }
+        else if (randomSpawnNumber >= 61 && randomSpawnNumber < 74)
+        {
+            spawnType = 6; //hard
+        }
+        else if (randomSpawnNumber >= 74 && randomSpawnNumber < 87)
+        {
+            spawnType = 7; //hard
+        }
+        else if (randomSpawnNumber >= 87 && randomSpawnNumber < 101)
+        {
+            spawnType = 8; //hard
+        }
+
+        SpawnEnemy();
+    }
+
+    public void SpawnEnemy()
+    {
         switch (spawnType)
         {
             case 1: // <---->1
@@ -172,13 +343,40 @@ public class EnemyCreator_script : MonoBehaviour
         }
     }
 
-    void MediumLevel()
+    public void SpawnHPKit()
     {
-
+        var newPosition = new Vector3(Random.Range(-35, 35), 0, 90);
+        Instantiate(HPKit, newPosition, Quaternion.identity);
     }
 
-    void HardLevel()
+    public void AddHPForEnemies()
     {
+        StandartEnemy1.GetComponent<StandartEnemy1_script>().EnemyLife += AddHP;
+        StandartEnemy2.GetComponent<StandartEnemy2_script>().EnemyLife += AddHP;
+        StandartEnemy3.GetComponent<StandartEnemy3_script>().EnemyLife += AddHP;
 
+        LightEnemy1.GetComponent<LightEnemy1_script>().EnemyLife += AddHP;
+        LightEnemy2.GetComponent<LightEnemy2_script>().EnemyLife += AddHP;
+
+        HardEnemy1.GetComponent<HardEnemy1_script>().EnemyLife += AddHP;
+        HardEnemy2.GetComponent<HardEnemy2_script>().EnemyLife += AddHP;
+        HardEnemy3.GetComponent<HardEnemy3_script>().EnemyLife += AddHP;
+    }
+
+    public void SetDefaultSettings()
+    {
+        StandartEnemy1.GetComponent<StandartEnemy1_script>().EnemyLife = 5;
+        StandartEnemy2.GetComponent<StandartEnemy2_script>().EnemyLife = 5;
+        StandartEnemy3.GetComponent<StandartEnemy3_script>().EnemyLife = 5;
+
+        LightEnemy1.GetComponent<LightEnemy1_script>().EnemyLife = 1;
+        LightEnemy2.GetComponent<LightEnemy2_script>().EnemyLife = 2;
+
+        HardEnemy1.GetComponent<HardEnemy1_script>().EnemyLife = 15;
+        HardEnemy2.GetComponent<HardEnemy2_script>().EnemyLife = 15;
+        HardEnemy3.GetComponent<HardEnemy3_script>().EnemyLife = 25;
+
+        NextWaveDelay = 14;
+        NextHPKitDelay = 60;
     }
 }
