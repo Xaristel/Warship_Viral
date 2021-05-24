@@ -97,7 +97,7 @@ public class GameController_script : MonoBehaviour
             Player_Script.IncreaseGunLevel();
             LevelText.text = Player_Script.GetGunLevel().ToString();
             ScoreForNextLevel *= 2;
-            enemyCreator_Script.NextWaveDelay -= 2;
+            enemyCreator_Script.NextWaveDelay -= 3;
             enemyCreator_Script.AddHPForEnemies();
 
             if (Player_Script.GetGunLevel() == 3)

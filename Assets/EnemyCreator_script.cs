@@ -25,7 +25,7 @@ public class EnemyCreator_script : MonoBehaviour
 
     protected GameController_script gameController_Script;
 
-    public double NextWaveDelay = 14; //14 - default
+    public double NextWaveDelay = 13; //14 - default
     public double NextWaveTime = 0;
     public double NextHPKitDelay = 60; //60 - default
     public double NextHPKitTime = 0;

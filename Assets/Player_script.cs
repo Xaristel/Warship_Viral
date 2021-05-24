@@ -196,6 +196,16 @@ public class Player_script : MonoBehaviour
                         Instantiate(Shot, AddGun4.transform.position, Quaternion.identity);
                         break;
                     }
+                default:
+                    {
+                        Instantiate(Shot, Gun1.transform.position, Quaternion.identity);
+                        Instantiate(Shot, Gun2.transform.position, Quaternion.identity);
+                        Instantiate(Shot, AddGun1.transform.position, Quaternion.identity);
+                        Instantiate(Shot, AddGun2.transform.position, Quaternion.identity);
+                        Instantiate(Shot, AddGun3.transform.position, Quaternion.identity);
+                        Instantiate(Shot, AddGun4.transform.position, Quaternion.identity);
+                        break;
+                    }
             }
             nextShot = Time.time + shotDelay;
         }
@@ -204,6 +214,14 @@ public class Player_script : MonoBehaviour
         {
             switch (GunLevel)
             {
+                case 1:
+                    {
+                        break;
+                    }
+                case 2:
+                    {
+                        break;
+                    }
                 case 3:
                     {
                         Instantiate(Rocket, Rocket1.transform.position, Quaternion.identity);
@@ -217,6 +235,12 @@ public class Player_script : MonoBehaviour
                         break;
                     }
                 case 5:
+                    {
+                        Instantiate(Rocket, Rocket1.transform.position, Quaternion.identity);
+                        Instantiate(Rocket, Rocket2.transform.position, Quaternion.identity);
+                        break;
+                    }
+                default:
                     {
                         Instantiate(Rocket, Rocket1.transform.position, Quaternion.identity);
                         Instantiate(Rocket, Rocket2.transform.position, Quaternion.identity);
