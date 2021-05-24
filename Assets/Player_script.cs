@@ -149,7 +149,7 @@ public class Player_script : MonoBehaviour
 
         ship.position = new Vector3(xPosition, 0, zPosition);
 
-        //Input.GetButton("Fire1") && 
+
         if (Time.time > nextShot) // если текущее время больше предыдущего на shotDelay
         {
             switch (GunLevel)

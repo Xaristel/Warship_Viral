@@ -1,6 +1,7 @@
 ﻿using Lean.Localization;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,10 +12,11 @@ public class GameController_script : MonoBehaviour
     public UnityEngine.UI.Text XPText;
     public UnityEngine.UI.Text EndGameScoreText;
 
-    public UnityEngine.UI.Button startButton;
-    public UnityEngine.UI.Button recordButton;
-    public UnityEngine.UI.Button exitButton;
-    public UnityEngine.UI.Button exitButtonSettings;
+    public UnityEngine.UI.Button Button_StartGame;
+    public UnityEngine.UI.Button Button_Records;
+    public UnityEngine.UI.Button Button_Exit;
+    public UnityEngine.UI.Button Button_ExitSettings;
+    public UnityEngine.UI.Button Button_ExitRecords;
 
     public UnityEngine.UI.Button Button_Easy;
     public UnityEngine.UI.Button Button_Normal;
@@ -26,11 +28,12 @@ public class GameController_script : MonoBehaviour
 
     public UnityEngine.UI.Button Button_Pause;
     public UnityEngine.UI.Button Button_SelectLanguage;
-    public UnityEngine.UI.Button EndButton;
+    public UnityEngine.UI.Button Button_End;
 
     public GameObject menu;
     public GameObject settings;
     public GameObject difficult;
+    public GameObject records;
     public GameObject mainCamera;
     public GameObject InGameMenu;
     public GameObject Canvas;
@@ -122,11 +125,13 @@ public class GameController_script : MonoBehaviour
         difficult.SetActive(false);
         InGameMenu.SetActive(false);
         InGameUI.SetActive(false);
+        records.SetActive(false);
         menu.SetActive(true);
 
         Player = GameObject.Find("Player");
         Player_Script = Player.GetComponent<Player_script>();
         enemyCreator_Script = GameObject.Find("EnemyCreators").GetComponent<EnemyCreator_script>();
+        LoadRecords();
 
         if (PlayerPrefs.HasKey("SelectedLanguage"))
         {
@@ -150,7 +155,7 @@ public class GameController_script : MonoBehaviour
             LevelText.rectTransform.localPosition = new Vector3(26, 298, 0);
         }
 
-        startButton.onClick.AddListener(delegate
+        Button_StartGame.onClick.AddListener(delegate
         {
             menu.SetActive(false); //выключение меню
             settings.SetActive(false);
@@ -158,10 +163,9 @@ public class GameController_script : MonoBehaviour
 
             Player_Script.gameObject.SetActive(true);
             Player.transform.position = new Vector3(0, 0, -60);
-            Player_Script.SetPlayerLife(10);
         });
 
-        EndButton.onClick.AddListener(delegate
+        Button_End.onClick.AddListener(delegate
         {
             SettingsMode = false;
             menu.SetActive(true);
@@ -172,18 +176,21 @@ public class GameController_script : MonoBehaviour
             isGameEnd = true;
         });
 
-        recordButton.onClick.AddListener(delegate
+        Button_Records.onClick.AddListener(delegate
         {
-            //records
+            LoadRecords();
+
+            menu.SetActive(false);
+            records.SetActive(true);
         });
 
-        exitButton.onClick.AddListener(delegate
+        Button_Exit.onClick.AddListener(delegate
         {
             Application.Quit(); //выход из приложения
         }
         );
 
-        exitButtonSettings.onClick.AddListener(delegate
+        Button_ExitSettings.onClick.AddListener(delegate
         {
             if (SettingsMode) //если во время игры
             {
@@ -204,6 +211,7 @@ public class GameController_script : MonoBehaviour
             Score = 0;
             ScoreForNextLevel = 300;
             Player_Script.SetGunLevel(1);
+            Player_Script.SetPlayerLife(10);
             ScoreText.text = Score.ToString();
             LevelText.text = Player_Script.GetGunLevel().ToString();
             EndGameScoreText.text = "";
@@ -225,6 +233,7 @@ public class GameController_script : MonoBehaviour
             Score = 0;
             ScoreForNextLevel = 300;
             Player_Script.SetGunLevel(1);
+            Player_Script.SetPlayerLife(7);
             ScoreText.text = Score.ToString();
             LevelText.text = Player_Script.GetGunLevel().ToString();
             EndGameScoreText.text = "";
@@ -246,6 +255,7 @@ public class GameController_script : MonoBehaviour
             Score = 0;
             ScoreForNextLevel = 300;
             Player_Script.SetGunLevel(1);
+            Player_Script.SetPlayerLife(5);
             ScoreText.text = Score.ToString();
             LevelText.text = Player_Script.GetGunLevel().ToString();
             EndGameScoreText.text = "";
@@ -277,7 +287,7 @@ public class GameController_script : MonoBehaviour
             {
                 menu.SetActive(false);
                 difficult.SetActive(false);
-                //record.SetActive(false);        TODO
+                records.SetActive(false);
                 settings.SetActive(true);
             }
         });
@@ -326,6 +336,12 @@ public class GameController_script : MonoBehaviour
             }
             PlayerPrefs.Save();
         });
+
+        Button_ExitRecords.onClick.AddListener(delegate
+        {
+            records.SetActive(false);
+            menu.SetActive(true);
+        });
     }
 
     void Update()
@@ -345,12 +361,65 @@ public class GameController_script : MonoBehaviour
                 {
                     EndGameScoreText.text = "Score: " + Score.ToString();
                 }
+                SaveRecord();
 
                 GameEnd.SetActive(true);
                 Button_Pause.enabled = false;
             }
             XPText.text = Player_Script.GetPlayerLife().ToString();
         }
+    }
 
+    private void SaveRecord()
+    {
+        using (BinaryWriter writer = new BinaryWriter(File.Open(Application.persistentDataPath + "/Records.dat", FileMode.Append)))
+        {
+            Record record = new Record("Xaristel", 0, Score);
+
+            writer.Write(record.name);
+            writer.Write(record.id);
+            writer.Write(record.score);
+        }
+    }
+
+    private void LoadRecords()
+    {
+        List<Record> RecordsList = new List<Record>();
+
+        using (BinaryReader reader = new BinaryReader(File.Open(Application.persistentDataPath + "/Records.dat", FileMode.OpenOrCreate)))
+        {
+            while (reader.PeekChar() > -1)
+            {
+                RecordsList.Add(new Record(reader.ReadString(), reader.ReadInt32(), reader.ReadInt32())); //name id score
+            }
+        }
+
+        RecordsList.Sort(delegate (Record x, Record y)
+        {
+            return y.score.CompareTo(x.score);
+        });
+
+        if (Language == 1)
+        {
+            records.transform.Find("Scroll View").transform.Find("Viewport").transform.Find("Content").GetComponent<Text>().text = string.Format($"№ \t\t\tИгрок \t\t\tСчёт \n");
+        }
+        else
+        {
+            records.transform.Find("Scroll View").transform.Find("Viewport").transform.Find("Content").GetComponent<Text>().text = string.Format($"№ \t\t\tPlayer\t\t\tScore\n");
+        }
+
+
+        for (int i = 0; i < RecordsList.Count; i++)
+        {
+            records.transform.Find("Scroll View").transform.Find("Viewport").transform.Find("Content").GetComponent<Text>().text += string.Format($"{i}.\t\t\t\t{RecordsList[i].name}\t\t{RecordsList[i].score}\n");
+        }
+    }
+
+    private void ResetRecords()
+    {
+        using (BinaryWriter writer = new BinaryWriter(File.Open(Application.persistentDataPath + "/Records.dat", FileMode.Create)))
+        {
+            //
+        }
     }
 }
