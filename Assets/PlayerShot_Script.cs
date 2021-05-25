@@ -32,11 +32,8 @@ public class PlayerShot_Script : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnDestroy()
     {
-        if (other.tag == "LightEnemy" && other.tag == "StandartEnemy" && other.tag == "HardEnemy" && other.tag == "Boss")
-        {
-            Instantiate(Explosion, gameObject.transform.position, Quaternion.identity);
-        }
+        Instantiate(Explosion, gameObject.transform.position, Quaternion.identity);
     }
 }

@@ -12,7 +12,6 @@ public class StandartEnemy2_script : MonoBehaviour
     public GameObject Shot; //что создать
     public GameObject Rocket;
     public GameObject EnemyExplosion;
-    public GameObject Shield;
 
     Rigidbody ship;
 
@@ -185,7 +184,6 @@ public class StandartEnemy2_script : MonoBehaviour
         if (other.tag == "PlayerShot")
         {
             EnemyLife--;
-            Shield.SetActive(true);
             Destroy(other.gameObject); //destroy shot
 
             if (EnemyLife == 0)

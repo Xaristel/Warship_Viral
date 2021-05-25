@@ -21,11 +21,19 @@ public class Shield_script : MonoBehaviour
             isTimeToFalse = false;
         }
 
-        if (Time.time > ShieldDelay + 1)
+        if (Time.time > ShieldDelay + 1.2)
         {
             gameObject.SetActive(false);
             ShieldDelay = float.MaxValue;
             isTimeToFalse = true;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "EnemyShot" || other.tag == "Asteroid" || other.tag == "InsectoidEnemy")
+        {
+            Destroy(other.gameObject);
         }
     }
 }

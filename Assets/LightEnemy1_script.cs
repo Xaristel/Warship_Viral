@@ -8,7 +8,6 @@ public class LightEnemy1_script : MonoBehaviour
     public GameObject Gun2; //где создать
     public GameObject Shot; //что создать
     public GameObject EnemyExplosion;
-    public GameObject Shield;
 
     Rigidbody ship;
 
@@ -138,7 +137,6 @@ public class LightEnemy1_script : MonoBehaviour
         if (other.tag == "PlayerShot")
         {
             EnemyLife--;
-            Shield.SetActive(true);
             Destroy(other.gameObject); //destroy shot
 
             if (EnemyLife == 0)

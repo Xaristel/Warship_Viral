@@ -11,7 +11,6 @@ public class HardEnemy2_script : MonoBehaviour
     public GameObject Shot;
     public GameObject Plasma; //что создать
     public GameObject EnemyExplosion;
-    public GameObject Shield;
 
     Rigidbody ship;
 
@@ -160,7 +159,6 @@ public class HardEnemy2_script : MonoBehaviour
         if (other.tag == "PlayerShot")
         {
             EnemyLife--;
-            Shield.SetActive(true);
             Destroy(other.gameObject); //destroy shot
 
             if (EnemyLife == 0)
