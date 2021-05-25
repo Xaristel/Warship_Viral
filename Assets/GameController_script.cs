@@ -7,9 +7,7 @@ using UnityEngine.UI;
 
 public class GameController_script : MonoBehaviour
 {
-    public UnityEngine.UI.Text ScoreText; //текст счета
-    public UnityEngine.UI.Text LevelText; //текст уровня оружия
-    public UnityEngine.UI.Text XPText;
+    public UnityEngine.UI.Text Data;
     public UnityEngine.UI.Text EndGameScoreText;
 
     public UnityEngine.UI.Button Button_StartGame;
@@ -93,12 +91,10 @@ public class GameController_script : MonoBehaviour
                     break;
                 }
         }
-        ScoreText.text = Score.ToString();
 
         if ((double)Score / (double)ScoreForNextLevel > 1)
         {
             Player_Script.IncreaseGunLevel();
-            LevelText.text = Player_Script.GetGunLevel().ToString();
             ScoreForNextLevel *= 2;
             enemyCreator_Script.NextWaveDelay -= 3;
             enemyCreator_Script.AddHPForEnemies();
@@ -142,17 +138,6 @@ public class GameController_script : MonoBehaviour
         else
         {
             Debug.LogError("There is no save data!");
-        }
-
-        if (Language == 1)
-        {
-            ScoreText.rectTransform.localPosition = new Vector3(-50, 298, 0);
-            LevelText.rectTransform.localPosition = new Vector3(51, 298, 0);
-        }
-        else
-        {
-            ScoreText.rectTransform.localPosition = new Vector3(-44, 298, 0);
-            LevelText.rectTransform.localPosition = new Vector3(26, 298, 0);
         }
 
         Button_StartGame.onClick.AddListener(delegate
@@ -212,9 +197,6 @@ public class GameController_script : MonoBehaviour
             ScoreForNextLevel = 300;
             Player_Script.SetGunLevel(1);
             Player_Script.SetPlayerLife(10);
-            ScoreText.text = Score.ToString();
-            LevelText.text = Player_Script.GetGunLevel().ToString();
-            EndGameScoreText.text = "";
 
             enemyCreator_Script.SetDefaultSettings();
 
@@ -234,9 +216,6 @@ public class GameController_script : MonoBehaviour
             ScoreForNextLevel = 300;
             Player_Script.SetGunLevel(1);
             Player_Script.SetPlayerLife(7);
-            ScoreText.text = Score.ToString();
-            LevelText.text = Player_Script.GetGunLevel().ToString();
-            EndGameScoreText.text = "";
 
             enemyCreator_Script.SetDefaultSettings();
 
@@ -256,9 +235,6 @@ public class GameController_script : MonoBehaviour
             ScoreForNextLevel = 300;
             Player_Script.SetGunLevel(1);
             Player_Script.SetPlayerLife(5);
-            ScoreText.text = Score.ToString();
-            LevelText.text = Player_Script.GetGunLevel().ToString();
-            EndGameScoreText.text = "";
 
             enemyCreator_Script.SetDefaultSettings();
 
@@ -320,19 +296,17 @@ public class GameController_script : MonoBehaviour
         {
             if (Button_SelectLanguage.GetComponentInChildren<Text>().text == "English")
             {
+                Language = 1;
                 PlayerPrefs.SetInt("SelectedLanguage", 1);
                 leanLocalization.SetCurrentLanguage(1);
                 Button_SelectLanguage.GetComponentInChildren<Text>().text = "Русский";
-                ScoreText.rectTransform.localPosition = new Vector3(-50, 298, 0);
-                LevelText.rectTransform.localPosition = new Vector3(51, 298, 0);
             }
             else
             {
+                Language = 0;
                 PlayerPrefs.SetInt("SelectedLanguage", 0);
                 leanLocalization.SetCurrentLanguage(0);
                 Button_SelectLanguage.GetComponentInChildren<Text>().text = "English";
-                ScoreText.rectTransform.localPosition = new Vector3(-44, 298, 0);
-                LevelText.rectTransform.localPosition = new Vector3(26, 298, 0);
             }
             PlayerPrefs.Save();
         });
@@ -351,7 +325,6 @@ public class GameController_script : MonoBehaviour
             if (Player_Script.GetPlayerLife() <= 0)//end game
             {
                 isStarted = false;
-                XPText.text = "0";
 
                 if (Language == 1)
                 {
@@ -366,7 +339,15 @@ public class GameController_script : MonoBehaviour
                 GameEnd.SetActive(true);
                 Button_Pause.enabled = false;
             }
-            XPText.text = Player_Script.GetPlayerLife().ToString();
+        }
+
+        if (Language == 1) //ru
+        {
+            Data.text = string.Format($"Счёт:{Score}\t\t\tУровень:{Player_Script.GetGunLevel()}\t  ОЗ:{Player_Script.GetPlayerLife()}");
+        }
+        else //en
+        {
+            Data.text = string.Format($"Score:{Score}\t\t\tLevel:{Player_Script.GetGunLevel()}\t\tHP:{Player_Script.GetPlayerLife()}");
         }
     }
 
@@ -374,7 +355,7 @@ public class GameController_script : MonoBehaviour
     {
         using (BinaryWriter writer = new BinaryWriter(File.Open(Application.persistentDataPath + "/Records.dat", FileMode.Append)))
         {
-            Record record = new Record("Xaristel", 0, Score);
+            Record record = new Record("Player", 0, Score);
 
             writer.Write(record.name);
             writer.Write(record.id);
@@ -401,17 +382,20 @@ public class GameController_script : MonoBehaviour
 
         if (Language == 1)
         {
-            records.transform.Find("Scroll View").transform.Find("Viewport").transform.Find("Content").GetComponent<Text>().text = string.Format($"№ \t\t\tИгрок \t\t\tСчёт \n");
+            records.transform.Find("Scroll View").transform.Find("Viewport").transform.Find("Content").GetComponent<Text>().text
+                = string.Format($"No\t\tИгрок \t\t\tСчёт \n");
         }
         else
         {
-            records.transform.Find("Scroll View").transform.Find("Viewport").transform.Find("Content").GetComponent<Text>().text = string.Format($"№ \t\t\tPlayer\t\t\tScore\n");
+            records.transform.Find("Scroll View").transform.Find("Viewport").transform.Find("Content").GetComponent<Text>().text
+                = string.Format($"No\t\tPlayer\t\tScore\n");
         }
 
 
         for (int i = 0; i < RecordsList.Count; i++)
         {
-            records.transform.Find("Scroll View").transform.Find("Viewport").transform.Find("Content").GetComponent<Text>().text += string.Format($"{i}.\t\t\t\t{RecordsList[i].name}\t\t{RecordsList[i].score}\n");
+            records.transform.Find("Scroll View").transform.Find("Viewport").transform.Find("Content").GetComponent<Text>().text
+                += string.Format($"{i}.\t\t{RecordsList[i].name}\t\t{RecordsList[i].score}\n");
         }
     }
 
