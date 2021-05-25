@@ -147,6 +147,7 @@ public class GameController_script : MonoBehaviour
             difficult.SetActive(true);
 
             Player_Script.gameObject.SetActive(true);
+            Player_Script.SetPlayerLife(10);
             Player.transform.position = new Vector3(0, 0, -60);
         });
 
