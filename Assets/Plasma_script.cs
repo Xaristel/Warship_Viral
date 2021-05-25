@@ -8,6 +8,7 @@ public class Plasma_script : MonoBehaviour
     private float Dist;
     private Vector3 VectorSpeed;
 
+    public GameObject Explosion;
     private GameObject Player;
     private GameController_script gameController_Script;
 
@@ -44,6 +45,14 @@ public class Plasma_script : MonoBehaviour
             {
                 Destroy(gameObject);
             }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player" || other.tag == "PlayerShield")
+        {
+            Instantiate(Explosion, gameObject.transform.position, Quaternion.identity);
         }
     }
 }

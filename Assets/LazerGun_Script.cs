@@ -6,6 +6,7 @@ public class LazerGun_Script : MonoBehaviour
 {
     public float speed;
     public Vector3 VectorSpeed;
+    public GameObject Explosion;
 
     private GameObject Player;
     private GameController_script gameController_Script;
@@ -43,6 +44,14 @@ public class LazerGun_Script : MonoBehaviour
             {
                 Destroy(gameObject);
             }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player" || other.tag == "PlayerShield")
+        {
+            Instantiate(Explosion, transform.position, Quaternion.identity);
         }
     }
 }

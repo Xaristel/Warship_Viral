@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerShot_Script : MonoBehaviour
 {
     public float speed;
+    public GameObject Explosion;
     private GameController_script gameController_Script;
     // Start is called before the first frame update
     void Start()
@@ -28,6 +29,14 @@ public class PlayerShot_Script : MonoBehaviour
         else
         {
             GetComponent<Rigidbody>().velocity = gameObject.transform.forward * speed;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "LightEnemy" && other.tag == "StandartEnemy" && other.tag == "HardEnemy" && other.tag == "Boss")
+        {
+            Instantiate(Explosion, gameObject.transform.position, Quaternion.identity);
         }
     }
 }
