@@ -16,6 +16,8 @@ TagManager:
   - Enemy
   - LightEnemy
   - Asteroid
+  - HP Kit
+  - Shield
   layers:
   - Default
   - TransparentFX

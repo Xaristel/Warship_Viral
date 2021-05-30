@@ -12,9 +12,12 @@ public class Player_script : MonoBehaviour
     public float rocketDelay;
     public float nextRocket;
 
-    protected GameController_script gameController_Script;
-    protected int GunLevel = 1;
-    public int Life = 10;
+    private GameController_script gameController_Script;
+    private int GunLevel = 1;
+    private int Life = 10;
+
+    private bool moveAllowed = false;
+    public float deltaX, deltaZ;
 
     public GameObject Gun1;//где создать
     public GameObject Gun2;
@@ -35,14 +38,7 @@ public class Player_script : MonoBehaviour
     public GameObject PlayerExplosion;
     public GameObject Shield;
 
-    public TouchPad touchPad;
-
     Rigidbody ship;
-
-    void UpLevel()
-    {
-        GunLevel++;
-    }
 
     public Rigidbody GetRigidbody()
     {
@@ -54,6 +50,11 @@ public class Player_script : MonoBehaviour
         return GunLevel;
     }
 
+    public void SetGunLevel(int level)
+    {
+        GunLevel = level;
+    }
+
     public void IncreaseGunLevel()
     {
         GunLevel++;
@@ -63,9 +64,19 @@ public class Player_script : MonoBehaviour
         return Life;
     }
 
+    public void SetPlayerLife(int life)
+    {
+        Life = life;
+    }
+
     public void DecreasePlayerLife()
     {
         Life--;
+    }
+
+    public void IncreasePlayerLife()
+    {
+        Life++;
     }
 
     void Start() //вызывается при создании объекта 
@@ -74,63 +85,56 @@ public class Player_script : MonoBehaviour
         ship = GetComponent<Rigidbody>();
     }
 
-    private Vector2 _startPos;
-    private bool moveAllowed = false;
-    public float deltaX, deltaY;
-
 
     void Update() //вызывается на каждый кадр
     {
         if (!gameController_Script.getIsStarted())
         {
-            if (Life < 0)
-            {
-                Life = 0;
-            }
             return;
         }
-
-        //Vector2 direction = touchPad.GetDirection();
-        //куда хочет лететь игрок
-        //var moveHorizontal = Input.GetAxis("Horizontal");
-        //var moveVertical = Input.GetAxis("Vertical");
-
-        //полет и наклонение
-        //ship.velocity = new Vector3(direction.x, 0, direction.y) * speed;
-        //ship.rotation = Quaternion.Euler(direction.y * tilt, 0, -direction.x * tilt);
 
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-            Vector2 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
+            Vector3 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
             switch (touch.phase)
             {
                 case TouchPhase.Began:
-                    if (GetComponent<BoxCollider>() == Physics2D.OverlapPoint(touchPos))
                     {
-                        // get the offset between position you touches
-                        // and the center of the game object
-                        deltaX = touchPos.x - transform.position.x;
-                        deltaY = touchPos.y - transform.position.y;
-                        // if touch begins within the ball collider
-                        // then it is allowed to move
-                        moveAllowed = true;
-                        // restrict some rigidbody properties so it moves
-                        // more  smoothly and correctly
-                        ship.velocity = new Vector3(0, 0, 0);
+                        if (GetComponent<BoxCollider>() == Physics2D.OverlapPoint(touchPos))
+                        {
+                            // get the offset between position you touches
+                            // and the center of the game object
+                            deltaX = touchPos.x - transform.position.x;
+                            deltaZ = touchPos.z - transform.position.z;
+                            // if touch begins within the ball collider
+                            // then it is allowed to move
+                            moveAllowed = true;
+                            // restrict some rigidbody properties so it moves
+                            // more  smoothly and correctly
+                            ship.velocity = new Vector3(0, 0, 0);
+                        }
+                        break;
                     }
-                    break;
-
 
                 case TouchPhase.Moved:
-                    if (GetComponent<BoxCollider>() == Physics2D.OverlapPoint(touchPos) && moveAllowed)
-                        ship.MovePosition(new Vector3(touchPos.x - deltaX, ship.position.y, touchPos.y - deltaY));
-                    break;
+                    {
+                        if (GetComponent<BoxCollider>() == Physics2D.OverlapPoint(touchPos) && moveAllowed)
+                        {
+                            ship.MovePosition(new Vector3(touchPos.x - deltaX, ship.position.y, touchPos.z - deltaZ));
+                        }
+
+                        break;
+                    }
+
                 case TouchPhase.Ended:
-                    // restore initial parameters
-                    // when touch is ended
-                    moveAllowed = false;
-                    break;
+                    {
+                        // restore initial parameters
+                        // when touch is ended
+                        moveAllowed = false;
+                        break;
+                    }
+
             }
         }
         //ограничение движения
@@ -139,7 +143,7 @@ public class Player_script : MonoBehaviour
 
         ship.position = new Vector3(xPosition, 0, zPosition);
 
-        //Input.GetButton("Fire1") && 
+
         if (Time.time > nextShot) // если текущее время больше предыдущего на shotDelay
         {
             switch (GunLevel)
@@ -186,6 +190,16 @@ public class Player_script : MonoBehaviour
                         Instantiate(Shot, AddGun4.transform.position, Quaternion.identity);
                         break;
                     }
+                default:
+                    {
+                        Instantiate(Shot, Gun1.transform.position, Quaternion.identity);
+                        Instantiate(Shot, Gun2.transform.position, Quaternion.identity);
+                        Instantiate(Shot, AddGun1.transform.position, Quaternion.identity);
+                        Instantiate(Shot, AddGun2.transform.position, Quaternion.identity);
+                        Instantiate(Shot, AddGun3.transform.position, Quaternion.identity);
+                        Instantiate(Shot, AddGun4.transform.position, Quaternion.identity);
+                        break;
+                    }
             }
             nextShot = Time.time + shotDelay;
         }
@@ -194,6 +208,14 @@ public class Player_script : MonoBehaviour
         {
             switch (GunLevel)
             {
+                case 1:
+                    {
+                        break;
+                    }
+                case 2:
+                    {
+                        break;
+                    }
                 case 3:
                     {
                         Instantiate(Rocket, Rocket1.transform.position, Quaternion.identity);
@@ -212,21 +234,34 @@ public class Player_script : MonoBehaviour
                         Instantiate(Rocket, Rocket2.transform.position, Quaternion.identity);
                         break;
                     }
+                default:
+                    {
+                        Instantiate(Rocket, Rocket1.transform.position, Quaternion.identity);
+                        Instantiate(Rocket, Rocket2.transform.position, Quaternion.identity);
+                        break;
+                    }
             }
             nextRocket = Time.time + rocketDelay;
         }
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "EnemyShot" || other.tag == "Asteroid" || other.tag == "InsectoidEnemy")
+        if (other.tag == "HP Kit")
+        {
+            IncreasePlayerLife();
+            Shield.SetActive(true);
+        }
+
+        if (other.tag == "EnemyShot" || other.tag == "Asteroid" || other.tag == "InsectoidEnemy" && gameController_Script.getIsStarted())
         {
             DecreasePlayerLife();
             Shield.SetActive(true);
             Destroy(other.gameObject);
         }
+
         if (GetPlayerLife() == 0)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
             Instantiate(PlayerExplosion, ship.transform.position, Quaternion.identity);
         }
     }

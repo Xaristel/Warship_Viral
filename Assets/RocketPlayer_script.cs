@@ -4,16 +4,20 @@ using UnityEngine;
 
 public class RocketPlayer_script : MonoBehaviour
 {
-    public float speed;
+    private float speed = 80;
+    private float minDist;
+
     private List<GameObject> EnemiesList = new List<GameObject>();
     private GameObject[] TempList;
     private GameObject Target = null;
-    private float minDist;
     public GameObject Explosion;
-    // Start is called before the first frame update
+
+    private GameController_script gameController_Script;
+
     void Start()
     {
-
+        gameController_Script = GameObject.Find("GameController").GetComponent<GameController_script>();
+        EnemiesList.Clear();
         TempList = GameObject.FindGameObjectsWithTag("LightEnemy");
         if (TempList != null)
             foreach (var item in TempList)
@@ -72,7 +76,6 @@ public class RocketPlayer_script : MonoBehaviour
                 }
 
             }
-            minDist = 85 / minDist;
         }
         else
         {
@@ -81,17 +84,29 @@ public class RocketPlayer_script : MonoBehaviour
 
     }
 
-    // Update is called once per frame
     void Update()
     {
+        if (!gameController_Script.getIsStarted())
+        {
+            GetComponent<Rigidbody>().velocity = gameObject.transform.forward * 0;
+
+            if (gameController_Script.GetIsGameEnd())
+            {
+                Destroy(gameObject);
+            }
+
+            return;
+        }
+
         if (Target != null)
         {
             Quaternion targetRotation = Quaternion.LookRotation(Target.transform.position - transform.position);
-            gameObject.transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 20); // Поворот к целевой точке.
-            GetComponent<Rigidbody>().velocity = gameObject.transform.forward * speed * minDist;
+            gameObject.transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 20);
+            GetComponent<Rigidbody>().velocity = gameObject.transform.forward * speed;
         }
         else
         {
+            Start();
             GetComponent<Rigidbody>().velocity = gameObject.transform.forward * 40;
         }
     }
