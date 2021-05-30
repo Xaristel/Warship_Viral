@@ -34,6 +34,9 @@ public class PlayerShot_Script : MonoBehaviour
 
     private void OnDestroy()
     {
-        Instantiate(Explosion, gameObject.transform.position, Quaternion.identity);
+        if (gameController_Script.getIsStarted())
+        {
+            Instantiate(Explosion, gameObject.transform.position, Quaternion.identity);
+        }
     }
 }

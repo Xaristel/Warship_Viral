@@ -26,11 +26,12 @@ public class EnemyCreator_script : MonoBehaviour
     protected GameController_script gameController_Script;
 
     public double NextWaveDelay = 13; //13 - default
-    public double NextWaveTime = 0;
-    public double NextHPKitDelay = 60; //60 - default
-    public double NextHPKitTime = 0;
+    private double NextWaveTime = 0;
+    private double NextHPKitDelay = 60; //60 - default
+    private double NextHPKitTime = 0;
+    public bool isFirstLaunch = true;
 
-    public int AddHP = 4;
+    private int AddHP = 1;
     private int spawnType;
 
     public int GetSpawnType()
@@ -38,36 +39,39 @@ public class EnemyCreator_script : MonoBehaviour
         return spawnType;
     }
 
-    void Start()    // Start is called before the first frame update
+    void Start()
     {
         gameController_Script = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController_script>();
-
         NextHPKitTime = Time.time + NextHPKitDelay;
 
         switch (gameController_Script.getMode())
         {
             case 1:
                 {
-                    AddHP = 4;
+                    AddHP = 2;
                     break;
                 }
             case 2:
                 {
-                    AddHP = 6;
+                    AddHP = 3;
                     break;
                 }
             case 3:
                 {
-                    AddHP = 8;
+                    AddHP = 4;
                     break;
                 }
         }
     }
 
-    void Update()   // Update is called once per frame
+    void Update()
     {
         if (!gameController_Script.getIsStarted())
         {
+            if (isFirstLaunch)
+            {
+                NextWaveTime = Time.time + 5;
+            }
             return;
         }
 
@@ -101,6 +105,7 @@ public class EnemyCreator_script : MonoBehaviour
             NextHPKitTime = Time.time + NextHPKitDelay;
             SpawnHPKit();
         }
+        isFirstLaunch = false;
     }
 
     void EasyLevel() // 35% - 50% - 15%
@@ -227,7 +232,7 @@ public class EnemyCreator_script : MonoBehaviour
     {
         switch (spawnType)
         {
-            case 1: // <---->1
+            case 1: // | | | |
                 {
                     var newPosition = new Vector3(-28, 0, 90);
                     Instantiate(StandartEnemy1, newPosition, Quaternion.identity);
@@ -242,7 +247,7 @@ public class EnemyCreator_script : MonoBehaviour
                     Instantiate(StandartEnemy1, newPosition, Quaternion.identity);
                     break;
                 }
-            case 2: // <---->2
+            case 2: // \  |  /
                 {
                     var newPosition = new Vector3(0, 0, 90);
                     Instantiate(StandartEnemy2, newPosition, Quaternion.identity);
@@ -254,62 +259,92 @@ public class EnemyCreator_script : MonoBehaviour
                     Instantiate(StandartEnemy2, newPosition, Quaternion.identity);
                     break;
                 }
-            case 3: //
+            case 3: // \\   //
                 {
-                    var newPosition = new Vector3(-28, 0, 90);
+                    var newPosition = new Vector3(-28, 0, 100);
                     Instantiate(StandartEnemy3, newPosition, Quaternion.identity);
 
-                    newPosition = new Vector3(-18, 0, 90);
+                    newPosition = new Vector3(-15, 0, 108);
                     Instantiate(StandartEnemy3, newPosition, Quaternion.identity);
 
-                    newPosition = new Vector3(18, 0, 90);
+                    newPosition = new Vector3(15, 0, 90);
                     Instantiate(StandartEnemy3, newPosition, Quaternion.identity);
 
-                    newPosition = new Vector3(28, 0, 90);
+                    newPosition = new Vector3(28, 0, 82);
                     Instantiate(StandartEnemy3, newPosition, Quaternion.identity);
                     break;
                 }
-            case 4: //
+            case 4: // | |  |  | |
                 {
                     var newPosition = new Vector3(-30, 0, 90);
                     Instantiate(LightEnemy1, newPosition, Quaternion.identity);
 
-                    newPosition = new Vector3(-22, 0, 90);
+                    newPosition = new Vector3(-18, 0, 90);
                     Instantiate(LightEnemy1, newPosition, Quaternion.identity);
 
                     newPosition = new Vector3(0, 0, 90);
                     Instantiate(LightEnemy1, newPosition, Quaternion.identity);
 
-                    newPosition = new Vector3(22, 0, 90);
+                    newPosition = new Vector3(18, 0, 90);
                     Instantiate(LightEnemy1, newPosition, Quaternion.identity);
 
                     newPosition = new Vector3(30, 0, 90);
                     Instantiate(LightEnemy1, newPosition, Quaternion.identity);
+
+                    newPosition = new Vector3(-30, 0, 110);
+                    Instantiate(LightEnemy1, newPosition, Quaternion.identity);
+
+                    newPosition = new Vector3(-18, 0, 110);
+                    Instantiate(LightEnemy1, newPosition, Quaternion.identity);
+
+                    newPosition = new Vector3(0, 0, 110);
+                    Instantiate(LightEnemy1, newPosition, Quaternion.identity);
+
+                    newPosition = new Vector3(18, 0, 110);
+                    Instantiate(LightEnemy1, newPosition, Quaternion.identity);
+
+                    newPosition = new Vector3(30, 0, 110);
+                    Instantiate(LightEnemy1, newPosition, Quaternion.identity);
+
+                    newPosition = new Vector3(-30, 0, 130);
+                    Instantiate(LightEnemy1, newPosition, Quaternion.identity);
+
+                    newPosition = new Vector3(-18, 0, 130);
+                    Instantiate(LightEnemy1, newPosition, Quaternion.identity);
+
+                    newPosition = new Vector3(0, 0, 130);
+                    Instantiate(LightEnemy1, newPosition, Quaternion.identity);
+
+                    newPosition = new Vector3(18, 0, 130);
+                    Instantiate(LightEnemy1, newPosition, Quaternion.identity);
+
+                    newPosition = new Vector3(30, 0, 130);
+                    Instantiate(LightEnemy1, newPosition, Quaternion.identity);
                     break;
                 }
-            case 5: //
+            case 5: // \    /
                 {
-                    var newPosition = new Vector3(-30, 0, 90);
+                    var newPosition = new Vector3(-30, 0, 100);
                     Instantiate(LightEnemy2, newPosition, Quaternion.identity);
 
                     newPosition = new Vector3(-22, 0, 90);
                     Instantiate(LightEnemy2, newPosition, Quaternion.identity);
 
-                    newPosition = new Vector3(-14, 0, 90);
+                    newPosition = new Vector3(-14, 0, 80);
                     Instantiate(LightEnemy2, newPosition, Quaternion.identity);
 
-                    newPosition = new Vector3(14, 0, 90);
+                    newPosition = new Vector3(14, 0, 80);
                     Instantiate(LightEnemy2, newPosition, Quaternion.identity);
 
                     newPosition = new Vector3(22, 0, 90);
                     Instantiate(LightEnemy2, newPosition, Quaternion.identity);
 
-                    newPosition = new Vector3(30, 0, 90);
+                    newPosition = new Vector3(30, 0, 100);
                     Instantiate(LightEnemy2, newPosition, Quaternion.identity);
                     break;
                 }
 
-            case 6: //
+            case 6: // <---->
                 {
                     var newPosition = new Vector3(-15, 0, 90);
                     Instantiate(HardEnemy1, newPosition, Quaternion.identity);
@@ -318,7 +353,7 @@ public class EnemyCreator_script : MonoBehaviour
                     Instantiate(HardEnemy1, newPosition, Quaternion.identity);
                     break;
                 }
-            case 7: //
+            case 7: // | | |
                 {
                     var newPosition = new Vector3(-20, 0, 90);
                     Instantiate(HardEnemy2, newPosition, Quaternion.identity);
@@ -331,7 +366,7 @@ public class EnemyCreator_script : MonoBehaviour
                     break;
                 }
 
-            case 8: //
+            case 8: // |
                 {
                     var newPosition = new Vector3(0, 0, 90);
                     Instantiate(HardEnemy3, newPosition, Quaternion.identity);
@@ -356,8 +391,8 @@ public class EnemyCreator_script : MonoBehaviour
         StandartEnemy2.GetComponent<StandartEnemy2_script>().EnemyLife += AddHP;
         StandartEnemy3.GetComponent<StandartEnemy3_script>().EnemyLife += AddHP;
 
-        LightEnemy1.GetComponent<LightEnemy1_script>().EnemyLife += AddHP;
-        LightEnemy2.GetComponent<LightEnemy2_script>().EnemyLife += AddHP;
+        LightEnemy1.GetComponent<LightEnemy1_script>().EnemyLife += 1;
+        LightEnemy2.GetComponent<LightEnemy2_script>().EnemyLife += 1;
 
         HardEnemy1.GetComponent<HardEnemy1_script>().EnemyLife += AddHP;
         HardEnemy2.GetComponent<HardEnemy2_script>().EnemyLife += AddHP;
@@ -377,7 +412,7 @@ public class EnemyCreator_script : MonoBehaviour
         HardEnemy2.GetComponent<HardEnemy2_script>().EnemyLife = 15;
         HardEnemy3.GetComponent<HardEnemy3_script>().EnemyLife = 25;
 
-        NextWaveDelay = 14;
+        NextWaveDelay = 13;
         NextHPKitDelay = 60;
     }
 }

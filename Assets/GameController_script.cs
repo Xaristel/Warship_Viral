@@ -33,6 +33,7 @@ public class GameController_script : MonoBehaviour
     public GameObject difficult;
     public GameObject records;
     public GameObject mainCamera;
+    public GameObject menuMusic;
     public GameObject InGameMenu;
     public GameObject Canvas;
     public GameObject InGameUI;
@@ -40,12 +41,12 @@ public class GameController_script : MonoBehaviour
     public LeanLocalization leanLocalization;
 
     private GameObject Player;
-    private Player_script Player_Script; //объект скрипта игрока
+    private Player_script Player_Script;
     private EnemyCreator_script enemyCreator_Script;
 
-    protected int Score = 0; //переменная кол-ва очков
+    protected int Score = 0;
     protected int ScoreForNextLevel = 300;
-    private bool isStarted = false; //переменная начала игры
+    private bool isStarted = false;
     protected int Mode = 0;
     protected bool SettingsMode = false;
     private int Language = 0;
@@ -96,7 +97,7 @@ public class GameController_script : MonoBehaviour
         {
             Player_Script.IncreaseGunLevel();
             ScoreForNextLevel *= 2;
-            enemyCreator_Script.NextWaveDelay -= 3;
+            enemyCreator_Script.NextWaveDelay -= 2;
             enemyCreator_Script.AddHPForEnemies();
 
             if (Player_Script.GetGunLevel() == 3)
@@ -111,7 +112,7 @@ public class GameController_script : MonoBehaviour
         }
 
     }
-    // Start is called before the first frame update
+
     void Start()
     {
         Canvas.transform.position = new Vector3(0, 300, 0);
@@ -142,13 +143,15 @@ public class GameController_script : MonoBehaviour
 
         Button_StartGame.onClick.AddListener(delegate
         {
-            menu.SetActive(false); //выключение меню
+            menu.SetActive(false);
             settings.SetActive(false);
             difficult.SetActive(true);
 
             Player_Script.gameObject.SetActive(true);
             Player_Script.SetPlayerLife(10);
             Player.transform.position = new Vector3(0, 0, -60);
+
+            enemyCreator_Script.isFirstLaunch = true;
         });
 
         Button_End.onClick.AddListener(delegate
@@ -157,6 +160,8 @@ public class GameController_script : MonoBehaviour
             menu.SetActive(true);
             GameEnd.SetActive(false);
             InGameUI.SetActive(false);
+            mainCamera.SetActive(false);
+            menuMusic.SetActive(true);
             Button_Pause.enabled = true;
 
             isGameEnd = true;
@@ -172,7 +177,7 @@ public class GameController_script : MonoBehaviour
 
         Button_Exit.onClick.AddListener(delegate
         {
-            Application.Quit(); //выход из приложения
+            Application.Quit();
         }
         );
 
@@ -203,9 +208,10 @@ public class GameController_script : MonoBehaviour
 
             InGameUI.SetActive(true);
             difficult.SetActive(false);
+            menuMusic.SetActive(false);
             mainCamera.SetActive(true);
 
-            isStarted = true; //начало игры
+            isStarted = true;
             SettingsMode = true;
             isGameEnd = false;
         });
@@ -222,9 +228,10 @@ public class GameController_script : MonoBehaviour
 
             InGameUI.SetActive(true);
             difficult.SetActive(false);
+            menuMusic.SetActive(false);
             mainCamera.SetActive(true);
 
-            isStarted = true; //начало игры
+            isStarted = true;
             SettingsMode = true;
             isGameEnd = false;
         });
@@ -241,9 +248,10 @@ public class GameController_script : MonoBehaviour
 
             InGameUI.SetActive(true);
             difficult.SetActive(false);
+            menuMusic.SetActive(false);
             mainCamera.SetActive(true);
 
-            isStarted = true; //начало игры
+            isStarted = true;
             SettingsMode = true;
             isGameEnd = false;
         });
@@ -282,13 +290,14 @@ public class GameController_script : MonoBehaviour
             InGameUI.SetActive(false);
         });
 
-        Button_Exit_InGame.onClick.AddListener(delegate //выход в меню
+        Button_Exit_InGame.onClick.AddListener(delegate
         {
             menu.SetActive(true);
             InGameMenu.SetActive(false);
             isStarted = false;
             SettingsMode = false;
             mainCamera.SetActive(false);
+            menuMusic.SetActive(true);
             InGameUI.SetActive(false);
             isGameEnd = true;
         });
@@ -323,7 +332,7 @@ public class GameController_script : MonoBehaviour
     {
         if (isStarted)
         {
-            if (Player_Script.GetPlayerLife() <= 0)//end game
+            if (Player_Script.GetPlayerLife() <= 0)
             {
                 isStarted = false;
 
@@ -344,11 +353,11 @@ public class GameController_script : MonoBehaviour
 
         if (Language == 1) //ru
         {
-            Data.text = string.Format($"Счёт:{Score}\t\t\tУровень:{Player_Script.GetGunLevel()}\t  ОЗ:{Player_Script.GetPlayerLife()}");
+            Data.text = string.Format($"Счёт:{Score:D5}\tУровень:{Player_Script.GetGunLevel()}\tОЗ:{Player_Script.GetPlayerLife()}");
         }
         else //en
         {
-            Data.text = string.Format($"Score:{Score}\t\t\tLevel:{Player_Script.GetGunLevel()}\t\tHP:{Player_Script.GetPlayerLife()}");
+            Data.text = string.Format($"Score:{Score:D5}\t\tLevel:{Player_Script.GetGunLevel()}\tHP:{Player_Script.GetPlayerLife()}");
         }
     }
 

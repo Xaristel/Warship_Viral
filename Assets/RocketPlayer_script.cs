@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class RocketPlayer_script : MonoBehaviour
 {
-    public float speed;
+    private float speed = 80;
+    private float minDist;
+
     private List<GameObject> EnemiesList = new List<GameObject>();
     private GameObject[] TempList;
     private GameObject Target = null;
-    private float minDist;
     public GameObject Explosion;
 
     private GameController_script gameController_Script;
-    // Start is called before the first frame update
+
     void Start()
     {
         gameController_Script = GameObject.Find("GameController").GetComponent<GameController_script>();
@@ -75,7 +76,6 @@ public class RocketPlayer_script : MonoBehaviour
                 }
 
             }
-            minDist = 85 / minDist;
         }
         else
         {
@@ -84,7 +84,6 @@ public class RocketPlayer_script : MonoBehaviour
 
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!gameController_Script.getIsStarted())
@@ -102,9 +101,8 @@ public class RocketPlayer_script : MonoBehaviour
         if (Target != null)
         {
             Quaternion targetRotation = Quaternion.LookRotation(Target.transform.position - transform.position);
-            gameObject.transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 20); // Поворот к целевой точке.
-                                                                                                      // averageSpeed = 
-            GetComponent<Rigidbody>().velocity = gameObject.transform.forward * speed; //* minDist;
+            gameObject.transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 20);
+            GetComponent<Rigidbody>().velocity = gameObject.transform.forward * speed;
         }
         else
         {

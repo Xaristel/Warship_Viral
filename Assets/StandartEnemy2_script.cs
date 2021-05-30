@@ -9,56 +9,62 @@ public class StandartEnemy2_script : MonoBehaviour
     public GameObject Rocket1;
     public GameObject Rocket2;
 
-    public GameObject Shot; //что создать
+    public GameObject Shot;
     public GameObject Rocket;
     public GameObject EnemyExplosion;
 
-    Rigidbody ship;
+    private Rigidbody ship;
 
-    public float speed = 40; //скорость
+    private float speed = 20;
 
-    public float shotDelayLazer1 = 3;
-    public float shotDelayRocket1 = 5;
-    public float nextShotLazer1 = 0;
-    public float nextShotRocket1 = 0;
+    private float shotDelayLazer1 = 4;
+    private float shotDelayRocket1 = 6;
+    private float nextShotLazer1 = 0;
+    private float nextShotRocket1 = 0;
 
-    public float shotDelayLazer2 = 4;
-    public float shotDelayRocket2 = 6;
-    public float nextShotLazer2 = 0;
-    public float nextShotRocket2 = 0;
+    private float shotDelayLazer2 = 5;
+    private float shotDelayRocket2 = 7;
+    private float nextShotLazer2 = 0;
+    private float nextShotRocket2 = 0;
 
-    public int gameMode = 0;
-    public int spawnType = 0;
-    public float moveHorizontal = 0;
-    public float moveVertical = -1;
-    private bool endOfStartMoving = true;
-    private float lastX = 0;
+    private int gameMode = 0;
+    private int enemyNumber = 0;
+    private float moveHorizontal = 0;
+    private float moveVertical = -1;
     public int EnemyLife = 5;
 
     protected GameController_script gameController_Script;
-    protected EnemyCreator_script enemyCreator_Script;
     protected GameObject Player;
 
-    void Start() // Start is called before the first frame update
+    void Start()
     {
         gameController_Script = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController_script>();
-        enemyCreator_Script = GameObject.FindGameObjectWithTag("EnemyCreator").GetComponent<EnemyCreator_script>();
-
         Player = GameObject.FindGameObjectWithTag("Player");
 
         ship = GetComponent<Rigidbody>();
-        gameMode = gameController_Script.getMode();
-        spawnType = enemyCreator_Script.GetSpawnType();
-
         ship.rotation = Quaternion.Euler(0, 180, 0);
-        lastX = ship.position.x;
+
         nextShotLazer1 = Time.time + 3;
         nextShotRocket1 = Time.time + 3;
         nextShotLazer2 = Time.time + 4;
         nextShotRocket2 = Time.time + 4;
+
+        if (ship.transform.position.x > -21 && ship.transform.position.x < -19)
+        {
+            enemyNumber = 1;
+            moveHorizontal = 1;
+        }
+        else if (ship.transform.position.x > -1 && ship.transform.position.x < 1)
+        {
+            enemyNumber = 2;
+        }
+        else if (ship.transform.position.x > 19 && ship.transform.position.x < 21)
+        {
+            moveHorizontal = -1;
+            enemyNumber = 3;
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!gameController_Script.getIsStarted())
@@ -67,64 +73,90 @@ public class StandartEnemy2_script : MonoBehaviour
 
             if (gameController_Script.GetIsGameEnd())
             {
-                Destroy(gameObject); //destroy enemy
+                Destroy(gameObject);
                 Instantiate(EnemyExplosion, ship.transform.position, Quaternion.identity);
             }
 
             return;
         }
 
-        //полет и наклонение
-        switch (spawnType)
+        switch (enemyNumber)
         {
-            case 2:
+            case 1:
                 {
-                    if (ship.position.z > 30)
+                    if (ship.position.z > 65)
                     {
-                        moveHorizontal = 0;
                         moveVertical = -1;
-                        ship.velocity = new Vector3(moveHorizontal, 0, moveVertical) * speed;
                     }
-                    else
+                    if (ship.position.z < 0)
                     {
-                        if (endOfStartMoving)
-                        {
-                            moveHorizontal = 1;
-                            speed = 5;
-                            endOfStartMoving = false;
-                        }
-
-                        if (ship.position.x <= lastX - 10)
-                        {
-                            moveHorizontal = 1;
-                            lastX = ship.position.x + 10;
-                        }
-                        if (ship.position.x >= lastX + 10)
-                        {
-                            moveHorizontal = -1;
-                            lastX = ship.position.x - 10;
-                        }
-
-                        ship.velocity = new Vector3(moveHorizontal, 0, 0) * speed;
+                        moveVertical = 1;
                     }
+                    if (ship.position.x < -35)
+                    {
+                        moveHorizontal = 1;
+                    }
+                    if (ship.position.x > -5)
+                    {
+                        moveHorizontal = -1;
+                    }
+                    ship.velocity = new Vector3(moveHorizontal, 0, moveVertical) * speed;
 
                     break;
                 }
+            case 2:
+                {
+                    if (ship.position.z < -15)
+                    {
+                        moveVertical = 1;
+                    }
+                    else if (ship.position.z > 65)
+                    {
+                        moveVertical = -1;
+                    }
+                    ship.velocity = new Vector3(moveHorizontal, 0, moveVertical) * speed;
+
+                    break;
+                }
+            case 3:
+                {
+                    if (ship.position.z > 65)
+                    {
+                        moveVertical = -1;
+                    }
+                    if (ship.position.z < 0)
+                    {
+                        moveVertical = 1;
+                    }
+                    if (ship.position.x < 5)
+                    {
+                        moveHorizontal = 1;
+                    }
+                    if (ship.position.x > 35)
+                    {
+                        moveHorizontal = -1;
+                    }
+                    ship.velocity = new Vector3(moveHorizontal, 0, moveVertical) * speed;
+
+                    break;
+                }
+            default:
+                break;
         }
 
-        if (Time.time > nextShotLazer1) // если текущее время больше предыдущего на shotDelay
+        if (Time.time > nextShotLazer1)
         {
             Instantiate(Shot, Gun1.transform.position, Quaternion.identity);
             nextShotLazer1 = Time.time + shotDelayLazer1;
         }
 
-        if (Time.time > nextShotLazer2) // если текущее время больше предыдущего на shotDelay
+        if (Time.time > nextShotLazer2)
         {
             Instantiate(Shot, Gun2.transform.position, Quaternion.identity);
             nextShotLazer2 = Time.time + shotDelayLazer2;
         }
 
-        if (Time.time > nextShotRocket1) // если текущее время больше предыдущего на shotDelay
+        if (Time.time > nextShotRocket1)
         {
             switch (gameMode)
             {
@@ -146,7 +178,7 @@ public class StandartEnemy2_script : MonoBehaviour
             nextShotRocket1 = Time.time + shotDelayRocket1;
         }
 
-        if (Time.time > nextShotRocket2) // если текущее время больше предыдущего на shotDelay
+        if (Time.time > nextShotRocket2)
         {
             switch (gameMode)
             {
@@ -170,12 +202,9 @@ public class StandartEnemy2_script : MonoBehaviour
 
         if (Player != null)
         {
-            var rigidbody = GetComponent<Rigidbody>();
-            // Определение целевой ротации.
             Vector3 targetPoint = Player.transform.position;
             Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
-            // Поворот к целевой точке.
-            gameObject.transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 20 * Time.deltaTime) * Quaternion.Euler(0.0f, 0.0f, rigidbody.velocity.x * -15 * 2 * Time.deltaTime);
+            gameObject.transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 20 * Time.deltaTime) * Quaternion.Euler(0.0f, 0.0f, ship.velocity.x * -15 * 2 * Time.deltaTime);
         }
     }
 
@@ -184,11 +213,11 @@ public class StandartEnemy2_script : MonoBehaviour
         if (other.tag == "PlayerShot")
         {
             EnemyLife--;
-            Destroy(other.gameObject); //destroy shot
+            Destroy(other.gameObject);
 
             if (EnemyLife == 0)
             {
-                Destroy(gameObject); //destroy enemy
+                Destroy(gameObject);
                 Instantiate(EnemyExplosion, ship.transform.position, Quaternion.identity);
                 gameController_Script.IncreaseScore("StandartEnemy");
             }

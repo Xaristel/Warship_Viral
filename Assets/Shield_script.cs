@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Shield_script : MonoBehaviour
 {
-    float ShieldDelay = 0;
+    float ShieldTime = 0;
     bool isTimeToFalse = true;
     // Start is called before the first frame update
     void Start()
@@ -17,14 +17,14 @@ public class Shield_script : MonoBehaviour
     {
         if (gameObject.activeInHierarchy && isTimeToFalse)
         {
-            ShieldDelay = Time.time;
+            ShieldTime = Time.time;
             isTimeToFalse = false;
         }
 
-        if (Time.time > ShieldDelay + 1.2)
+        if (Time.time > ShieldTime + 1.2)
         {
             gameObject.SetActive(false);
-            ShieldDelay = float.MaxValue;
+            ShieldTime = float.MaxValue;
             isTimeToFalse = true;
         }
     }

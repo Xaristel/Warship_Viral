@@ -15,8 +15,9 @@ public class Player_script : MonoBehaviour
     private GameController_script gameController_Script;
     private int GunLevel = 1;
     private int Life = 10;
-    private float defendDelay = 1;
-    private float defendTime = 0;
+
+    private bool moveAllowed = false;
+    public float deltaX, deltaZ;
 
     public GameObject Gun1;//где создать
     public GameObject Gun2;
@@ -84,18 +85,11 @@ public class Player_script : MonoBehaviour
         ship = GetComponent<Rigidbody>();
     }
 
-    private bool moveAllowed = false;
-    public float deltaX, deltaZ;
-
 
     void Update() //вызывается на каждый кадр
     {
         if (!gameController_Script.getIsStarted())
         {
-            if (Life < 0)
-            {
-                Life = 0;
-            }
             return;
         }
 
@@ -258,22 +252,11 @@ public class Player_script : MonoBehaviour
             Shield.SetActive(true);
         }
 
-        if (Time.time < defendTime + defendDelay)
-        {
-            if (other.tag == "EnemyShot" || other.tag == "Asteroid" || other.tag == "InsectoidEnemy" && gameController_Script.getIsStarted())
-            {
-                Shield.SetActive(true);
-                Destroy(other.gameObject);
-            }
-            return;
-        }
-
         if (other.tag == "EnemyShot" || other.tag == "Asteroid" || other.tag == "InsectoidEnemy" && gameController_Script.getIsStarted())
         {
             DecreasePlayerLife();
             Shield.SetActive(true);
             Destroy(other.gameObject);
-            defendTime = Time.time;
         }
 
         if (GetPlayerLife() == 0)
