@@ -10,13 +10,13 @@ public class LightEnemy2_script : MonoBehaviour
     public GameObject EnemyExplosion;
 
     private Rigidbody ship;
-    private float speed = 50;
+    private float speed = 30;
 
     private float nextShotRocket1 = 0;
     private float nextShotRocket2 = 0;
 
     private float moveVertical = -1;
-    public int EnemyLife = 2;
+    public int EnemyLife = 1;
 
     protected GameController_script gameController_Script;
     protected EnemyCreator_script enemyCreator_Script;

@@ -79,7 +79,7 @@ public class RocketPlayer_script : MonoBehaviour
         }
         else
         {
-            GetComponent<Rigidbody>().velocity = gameObject.transform.forward * 40;
+            GetComponent<Rigidbody>().velocity = gameObject.transform.forward * speed;
         }
 
     }
@@ -107,7 +107,7 @@ public class RocketPlayer_script : MonoBehaviour
         else
         {
             Start();
-            GetComponent<Rigidbody>().velocity = gameObject.transform.forward * 40;
+            GetComponent<Rigidbody>().velocity = gameObject.transform.forward * speed;
         }
     }
 

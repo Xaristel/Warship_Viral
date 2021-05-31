@@ -204,7 +204,7 @@ public class Player_script : MonoBehaviour
             nextShot = Time.time + shotDelay;
         }
 
-        if (Time.time > nextRocket) // если текущее время больше предыдущего на shotDelay
+        if (Time.time > nextRocket)
         {
             switch (GunLevel)
             {

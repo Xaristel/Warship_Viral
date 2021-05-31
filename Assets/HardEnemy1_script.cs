@@ -136,6 +136,7 @@ public class HardEnemy1_script : MonoBehaviour
         if (other.tag == "PlayerShot")
         {
             EnemyLife--;
+            Destroy(other.gameObject);
 
             if (EnemyLife == 0)
             {

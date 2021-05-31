@@ -25,7 +25,7 @@ public class EnemyCreator_script : MonoBehaviour
 
     protected GameController_script gameController_Script;
 
-    public double NextWaveDelay = 13; //13 - default
+    public double NextWaveDelay = 12; //12 - default
     private double NextWaveTime = 0;
     private double NextHPKitDelay = 60; //60 - default
     private double NextHPKitTime = 0;
@@ -48,17 +48,17 @@ public class EnemyCreator_script : MonoBehaviour
         {
             case 1:
                 {
-                    AddHP = 2;
+                    AddHP = 3;
                     break;
                 }
             case 2:
                 {
-                    AddHP = 3;
+                    AddHP = 5;
                     break;
                 }
             case 3:
                 {
-                    AddHP = 4;
+                    AddHP = 7;
                     break;
                 }
         }
@@ -144,7 +144,7 @@ public class EnemyCreator_script : MonoBehaviour
         {
             spawnType = 8; //hard
         }
-
+        spawnType = 6;
         SpawnEnemy();
     }
 
@@ -401,18 +401,18 @@ public class EnemyCreator_script : MonoBehaviour
 
     public void SetDefaultSettings()
     {
-        StandartEnemy1.GetComponent<StandartEnemy1_script>().EnemyLife = 5;
-        StandartEnemy2.GetComponent<StandartEnemy2_script>().EnemyLife = 5;
-        StandartEnemy3.GetComponent<StandartEnemy3_script>().EnemyLife = 5;
+        StandartEnemy1.GetComponent<StandartEnemy1_script>().EnemyLife = 10; //5
+        StandartEnemy2.GetComponent<StandartEnemy2_script>().EnemyLife = 10; //5
+        StandartEnemy3.GetComponent<StandartEnemy3_script>().EnemyLife = 10; //5
 
         LightEnemy1.GetComponent<LightEnemy1_script>().EnemyLife = 1;
         LightEnemy2.GetComponent<LightEnemy2_script>().EnemyLife = 2;
 
-        HardEnemy1.GetComponent<HardEnemy1_script>().EnemyLife = 15;
-        HardEnemy2.GetComponent<HardEnemy2_script>().EnemyLife = 15;
-        HardEnemy3.GetComponent<HardEnemy3_script>().EnemyLife = 25;
+        HardEnemy1.GetComponent<HardEnemy1_script>().EnemyLife = 20; //15
+        HardEnemy2.GetComponent<HardEnemy2_script>().EnemyLife = 20; //15
+        HardEnemy3.GetComponent<HardEnemy3_script>().EnemyLife = 40; //30
 
-        NextWaveDelay = 13;
+        NextWaveDelay = 12;
         NextHPKitDelay = 60;
     }
 }
