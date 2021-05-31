@@ -144,7 +144,7 @@ public class EnemyCreator_script : MonoBehaviour
         {
             spawnType = 8; //hard
         }
-        spawnType = 6;
+
         SpawnEnemy();
     }
 
